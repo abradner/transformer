@@ -71,13 +71,37 @@ A tool for common string transformations including:
 - [x] Base64 encode/decode transformer
 - [x] Migrate test suite from Minitest to RSpec
 - [x] Update documentation to reflect current state
-- [ ] Kubernetes ConfigMap transformer
-- [ ] YAML configuration loader
-- [ ] Transformation validation system
+- [x] Design YAML configuration schemas
+- [ ] Implement YAML transformation loader with Liquid templating
+- [ ] Create validation tooling for YAML transformation files
+- [ ] Kubernetes ConfigMap transformer (using YAML system)
 
-**Current Task**: Ready to implement YAML configuration system for complex transformations
+**Current Task**: Implementing YAML configuration system with Liquid template engine
 
-### Story 2.3: Persistence Layer
+### Story 2.3: YAML Configuration System
+**Status**: 📋 Planning - Ready for Implementation
+- [ ] Create YAML transformation schema validation
+- [ ] Implement Liquid template engine integration
+- [ ] Build function whitelist security system
+- [ ] Create YAML transformation loader
+- [ ] Add file-based transformation discovery in `config/transformations/`
+- [ ] Build rake task for YAML validation tooling
+
+**Technical Details**: 
+- **Template Engine**: Liquid for security and flexibility
+- **Schema**: Single transformation definitions with sequential `transformations:` array
+- **Function System**: Whitelisted Ruby methods for complex operations
+- **File Location**: `config/transformations/` for built-ins, database storage for user-created
+
+### Story 2.4: Transformation Validation & Tooling
+**Status**: 📋 Planning
+- [ ] Create YAML schema validation using JSON Schema
+- [ ] Build `rake transformer:validate` task for testing YAML files
+- [ ] Add `rake transformer:list` to show available transformations
+- [ ] Create development helpers for transformation testing
+- [ ] Add YAML syntax error reporting with line numbers
+
+### Story 2.5: Persistence Layer
 **Status**: Not Started
 - [ ] Transformation model and database design
 - [ ] CRUD operations for custom transformations
@@ -150,6 +174,40 @@ A tool for common string transformations including:
 - [ ] CLI tool foundation (modular architecture)
 - [ ] Import from popular transformation tools
 - [ ] Export to various formats
+
+---
+
+## Epic 6: Pipeline Orchestration (Future)
+**Status**: 📋 Future Planning
+
+### Story 6.1: Pipeline Definition System
+**Status**: Not Started
+- [ ] Design pipeline YAML schema (separate from transformations)
+- [ ] Create pipeline orchestration engine
+- [ ] Implement sequential step execution
+- [ ] Add pipeline validation and error handling
+- [ ] Support for referencing existing transformations by name
+
+**Technical Details**:
+- **Pipeline Schema**: References transformations, doesn't define them
+- **Orchestration Layer**: Manages transformation flow and error handling
+- **Integration**: Pipelines implement `Transformable` for engine compatibility
+
+### Story 6.2: Advanced Pipeline Features
+**Status**: Not Started  
+- [ ] Conditional pipeline execution (if/then/else logic)
+- [ ] Parallel branch processing with merge capabilities
+- [ ] Pipeline nesting (pipelines calling other pipelines)
+- [ ] Error recovery and retry mechanisms
+- [ ] Pipeline performance monitoring and logging
+
+### Story 6.3: Pipeline Management Interface
+**Status**: Not Started
+- [ ] Pipeline creation and editing UI
+- [ ] Visual pipeline designer with drag-and-drop
+- [ ] Pipeline testing and debugging tools
+- [ ] Pipeline versioning and rollback
+- [ ] Pipeline sharing and collaboration features
 
 ---
 
