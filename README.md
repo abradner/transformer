@@ -92,22 +92,22 @@ See [goals.md](./goals.md) for detailed project tracking and current priorities.
 
 ```mermaid
 graph LR
-    A[Feature Specs] --> B[Controller Tests]
-    B --> C[Model Tests]
-    C --> D[Service Tests]
+    A[RSpec Specs] --> B[Model Tests]
+    B --> C[Integration Tests]
+    C --> D[System Tests]
     
     E[Jest Tests] --> F[Component Tests]
     F --> G[Integration Tests]
     
-    H[System Tests] --> A
+    H[BDD Workflow] --> A
     H --> E
 ```
 
 ### Backend Testing (RSpec)
-- **Models**: Unit tests for business logic
-- **Controllers**: API endpoint testing
-- **Services**: Business logic isolation
-- **Features**: End-to-end user flows
+- **Models**: Unit tests for business logic with descriptive contexts
+- **Integration**: End-to-end transformation workflows
+- **Services**: Business logic isolation and validation
+- **Features**: User-facing functionality (planned)
 
 ### Frontend Testing (Jest)
 - **Components**: React component behavior
@@ -119,24 +119,25 @@ graph LR
 ```
 app/
 ├── controllers/         # Rails controllers
-├── models/             # ActiveRecord models
+├── models/             # ActiveRecord models & transformation engine
+│   ├── concerns/       # Transformable interface
+│   └── transformations/ # Built-in transformation classes
 ├── views/              # ERB templates
 ├── javascript/         # Stimulus + React components
 │   ├── controllers/    # Stimulus controllers
-│   └── components/     # React components (TBD)
+│   └── __tests__/      # Jest test setup
 ├── jobs/               # Background jobs
-└── services/           # Business logic services (TBD)
+└── services/           # Business logic services (planned)
 
 config/
 ├── routes.rb           # Application routes
 ├── database.yml        # Database configuration
 └── importmap.rb        # JavaScript imports
 
-test/                   # Test files
-├── models/
-├── controllers/
-├── system/
-└── __tests__/          # Jest tests (TBD)
+spec/                   # RSpec test files
+├── models/             # Model and engine specs
+├── support/            # Test helpers and matchers
+└── factories/          # Test data factories
 ```
 
 ## 🚢 Deployment

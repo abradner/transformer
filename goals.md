@@ -66,12 +66,16 @@ A tool for common string transformations including:
 **Completed**: Core transformation engine with Transformable interface, Base64 encode/decode, Regex replacement with capture groups, validation framework, and comprehensive test coverage.
 
 ### Story 2.2: Built-in Transformations
-**Status**: 🎯 Current Priority
+**Status**: 🎯 Current Priority - In Progress
 - [x] Regex replacement transformer
 - [x] Base64 encode/decode transformer
+- [x] Migrate test suite from Minitest to RSpec
+- [x] Update documentation to reflect current state
 - [ ] Kubernetes ConfigMap transformer
 - [ ] YAML configuration loader
 - [ ] Transformation validation system
+
+**Current Task**: Ready to implement YAML configuration system for complex transformations
 
 ### Story 2.3: Persistence Layer
 **Status**: Not Started
@@ -174,19 +178,22 @@ Input → Transformation Selection → Processing Engine → Output
 
 ## Testing Commands Reference
 
-### Backend Testing
+### Backend Testing (RSpec)
 ```bash
-# Run all Rails tests
-bin/rails test
+# Run all RSpec tests
+bundle exec rspec
 
-# Run specific test file
-bin/rails test test/models/specific_test.rb
+# Run specific spec file
+bundle exec rspec spec/models/transformation_engine_spec.rb
 
-# Run with verbose output
-bin/rails test -v
+# Run with documentation format
+bundle exec rspec --format documentation
+
+# Run with coverage (when configured)
+bundle exec rspec --format documentation --format html --out coverage/index.html
 ```
 
-### Frontend Testing  
+### Frontend Testing (Jest)
 ```bash
 # Run all Jest tests
 npm test
