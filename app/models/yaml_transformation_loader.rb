@@ -128,7 +128,8 @@ class YamlTransformationLoader
       version: config["version"],
       template: transformation_config.dig("config", "template"),
       allowed_functions: transformation_config.dig("config", "allowed_functions") || [],
-      function_registry: @function_registry
+      function_registry: @function_registry,
+      line_range: transformation_config.dig("config", "line_range")
     )
   end
 end

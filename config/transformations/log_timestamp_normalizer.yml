@@ -1,0 +1,10 @@
+name: "log_timestamp_normalizer"
+description: "Convert ISO 8601 timestamps to human-readable format in log files"
+version: "1.0"
+
+transformations:
+  - type: "regex_replace"
+    config:
+      pattern: '(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})\.?\d*Z?'
+      replacement: '\1 \2'
+      flags: ["global"]

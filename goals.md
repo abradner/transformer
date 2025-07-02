@@ -97,10 +97,20 @@ A tool for common string transformations including:
 **Completed**: Complete YAML configuration system with Zeitwerk-compliant autoloading, security validation, and production-ready functionality.
 
 ### Story 2.5: Sample YAML Transformations & K8s ConfigMap
-**Status**: 🎯 Current Priority - Ready for Implementation
-- [ ] Create sample YAML transformation files
-- [ ] Implement Kubernetes ConfigMap transformer using YAML system
+**Status**: ✅ Complete
+- [x] Create sample YAML transformation files in `config/transformations/`
+- [x] Implement Kubernetes ConfigMap/Secret decoder using YAML system
+- [x] Add line_range filtering feature to function_based transformations
+- [x] Create comprehensive test coverage for sample transformations
+- [x] Update YAML schema documentation with line_range feature
 
+**Technical Details**:
+- **Line Range Filtering**: Added "DNA codon" pattern matching to function_based transformations
+- **K8s Secret Decoder**: Clean implementation targeting only `data:` section using start/stop patterns
+- **Sample Files**: Created log timestamp normalizer, log level highlighter, and K8s decoders
+- **Schema Extension**: Minimal, expressive `line_range` config for targeted processing
+
+**Completed**: Complete YAML sample transformations library with practical real-world examples including K8s Secret decoding, log processing, and pattern-based line filtering.
 
 ### Story 2.6: Transformation Validation & Tooling
 **Status**: 📋 Planning

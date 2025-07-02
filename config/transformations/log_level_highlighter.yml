@@ -1,0 +1,28 @@
+name: "log_level_highlighter"
+description: "Add visual emphasis to log levels with emoji and formatting"
+version: "1.0"
+
+transformations:
+  - type: "regex_replace"
+    config:
+      pattern: '(?i)\b(ERROR|FATAL)\b'
+      replacement: '🔴 [\1]'
+      flags: ["global"]
+
+  - type: "regex_replace"
+    config:
+      pattern: '(?i)\b(WARN|WARNING)\b'
+      replacement: '🟡 [\1]'
+      flags: ["global"]
+
+  - type: "regex_replace"
+    config:
+      pattern: '(?i)\b(INFO)\b'
+      replacement: '🔵 [\1]'
+      flags: ["global"]
+
+  - type: "regex_replace"
+    config:
+      pattern: '(?i)\b(DEBUG|TRACE)\b'
+      replacement: '⚪ [\1]'
+      flags: ["global"]

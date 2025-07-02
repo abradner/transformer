@@ -82,6 +82,12 @@ transformations:
         - map_values
         - base64_decode
         - join_lines
+
+      # Optional: Process only lines between start/stop patterns
+      line_range:                         # Object: Line range filtering (optional)
+        start_pattern: "^data:"           # String: Regex pattern to start processing
+        stop_pattern: "^(metadata|spec|status):" # String: Regex pattern to stop processing
+        include_boundaries: false         # Boolean: Include start/stop lines in processing
 ```
 
 ### Complete Examples
@@ -290,3 +296,8 @@ transformations:
 - **Sample inputs**: Include test cases in transformation documentation
 - **Edge cases**: Consider empty strings, special characters, malformed input
 - **Performance**: Test with realistic data sizes for your use cases
+
+## History Log
+- **2025-07-02**: Added line_range filtering to function_based transformations for targeted line processing
+- **2025-07-02**: Implemented K8s Secret decoder using line_range to target only data: section
+- **2025-07-02**: Created sample YAML transformations library with real-world examples
