@@ -11,6 +11,8 @@
 3. Implement well-factored code using appropriate libraries
 4. Update `goals.md` with outcome
 5. Update README/documentation
+6. Update history log in relevant .md files with date and changes
+7. Write a suitable commit message summarizing the story completion
 
 ## Code Quality Standards
 - **Rails**: Expert-level modern practices, leverage Rails 8 features
@@ -18,9 +20,47 @@
 - **Testing**: BDD approach, comprehensive test coverage
 - **Architecture**: DRY, functional, well-factored with common libraries
 
+## Rails 8 Zeitwerk Autoloading Rules
+### **Critical**: File structure MUST match constant names exactly
+
+#### File Naming Conventions
+- **snake_case** file names → **CamelCase** class names
+- `user_profile.rb` → `class UserProfile`
+- `yaml_transformation_loader.rb` → `class YamlTransformationLoader`
+
+#### Directory Structure Rules
+- **Nested modules** require matching directory structure:
+  - `app/models/yaml_transformations/base.rb` → `module YamlTransformations; class Base`
+  - `app/models/transformations/regex_replace.rb` → `module Transformations; class RegexReplace`
+
+#### Common Autoloading Mistakes to Avoid
+- ❌ `yaml_transformation_classes.rb` containing multiple unrelated classes
+- ❌ File names not matching class names (`base64_transformation.rb` for `Base64Encode`)
+- ❌ Missing namespace modules (`YamlTransformations::Base` without `module YamlTransformations`)
+- ❌ One file containing multiple top-level classes
+
+#### Best Practices
+- ✅ **One class per file** with matching names
+- ✅ **Module namespaces** in separate files or parent directories
+- ✅ **Test autoloading** with `Rails.autoloaders.main.dirs` in console
+- ✅ **Restart Rails** after major structural changes
+
+#### Debugging Autoloading Issues
+```ruby
+# Check autoloader directories
+Rails.autoloaders.main.dirs
+
+# Test constant loading
+YourClass # Should load without require
+
+# Check zeitwerk expectations
+Rails.autoloaders.main.eager_load_all
+```
+
 ## Documentation Requirements
 - **goals.md**: Jira-style tracker with Epics → Stories → Tasks, maintain history
 - **README.md**: Clear structure, current state, Mermaid diagrams for flows
+- **History logs**: Update with date and key changes in all relevant .md files
 - Keep all docs synchronized and up-to-date
 
 ## Collaboration Style
