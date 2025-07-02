@@ -55,6 +55,8 @@ group :development, :test do
 
   # RSpec testing framework
   gem "rspec-rails", "~> 6.1"
+  gem "rspec-github", require: false
+
   gem "factory_bot_rails", "~> 6.4"
   gem "faker", "~> 3.2"
 end

@@ -61,8 +61,8 @@ module YamlTransformations
 
     def build_liquid_context(input)
       {
-        'input' => input,
-        'previous' => input
+        "input" => input,
+        "previous" => input
       }
     end
 

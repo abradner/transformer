@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'base64'
+require "base64"
 
 # Registry for whitelisted functions that can be called from YAML transformations
 class YamlFunctionRegistry
@@ -26,34 +26,34 @@ class YamlFunctionRegistry
     end
 
     case function_name.to_s
-    when 'base64_encode'
+    when "base64_encode"
       Base64.strict_encode64(args.first.to_s)
-    when 'base64_decode'
+    when "base64_decode"
       Base64.strict_decode64(args.first.to_s)
-    when 'split_lines'
+    when "split_lines"
       args.first.to_s.split("\n")
-    when 'join_lines'
+    when "join_lines"
       args.first.join("\n")
-    when 'map_values'
+    when "map_values"
       # This is a simplified implementation
       # In a real system, this would be more sophisticated
       args.first.map { |item| yield(item) if block_given? }
-    when 'filter_lines'
+    when "filter_lines"
       args.first.select { |line| !line.strip.empty? }
-    when 'parse_kv_pair'
+    when "parse_kv_pair"
       line = args.first.to_s
       if line.match(/^\s*([^:]+):\s*(.+)\s*$/)
         { key: $1.strip, value: $2.strip }
       else
         { key: nil, value: line }
       end
-    when 'upcase'
+    when "upcase"
       args.first.to_s.upcase
-    when 'downcase'
+    when "downcase"
       args.first.to_s.downcase
-    when 'strip'
+    when "strip"
       args.first.to_s.strip
-    when 'gsub'
+    when "gsub"
       pattern, replacement = args[1], args[2]
       args.first.to_s.gsub(pattern, replacement)
     else

@@ -32,9 +32,9 @@ module Transformable
   # @return [ValidationResult] validation result with errors if any
   def validate_input(input)
     if input.nil?
-      ValidationResult.new(false, ["Input cannot be nil"])
+      ValidationResult.new(false, [ "Input cannot be nil" ])
     elsif !input.is_a?(String)
-      ValidationResult.new(false, ["Input must be a string"])
+      ValidationResult.new(false, [ "Input must be a string" ])
     else
       ValidationResult.new(true, [])
     end
@@ -49,7 +49,7 @@ module Transformable
         name: { type: "string" },
         description: { type: "string" }
       },
-      required: ["name"]
+      required: [ "name" ]
     }
   end
 

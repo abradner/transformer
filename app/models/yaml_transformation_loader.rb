@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'yaml'
-require 'liquid'
+require "yaml"
+require "liquid"
 
 # Service class that loads and creates transformations from YAML configuration files
 class YamlTransformationLoader
@@ -57,36 +57,36 @@ class YamlTransformationLoader
       raise ValidationError, "Missing required fields: #{missing_fields.join(', ')}"
     end
 
-    unless config['transformations'].is_a?(Array) && config['transformations'].any?
+    unless config["transformations"].is_a?(Array) && config["transformations"].any?
       raise ValidationError, "transformations must be a non-empty array"
     end
   end
 
   def build_transformation(config)
-    if config['transformations'].length == 1
+    if config["transformations"].length == 1
       # Single transformation
-      transformation_config = config['transformations'].first
+      transformation_config = config["transformations"].first
       build_single_transformation(config, transformation_config)
     else
       # Multi-step transformation
       YamlTransformations::CompositeTransformation.new(
-        name: config['name'],
-        description: config['description'],
-        version: config['version'],
-        transformations: config['transformations'].map { |t| build_single_transformation(config, t) }
+        name: config["name"],
+        description: config["description"],
+        version: config["version"],
+        transformations: config["transformations"].map { |t| build_single_transformation(config, t) }
       )
     end
   end
 
   def build_single_transformation(config, transformation_config)
-    case transformation_config['type']
-    when 'regex_replace'
+    case transformation_config["type"]
+    when "regex_replace"
       build_regex_transformation(config, transformation_config)
-    when 'base64_encode'
+    when "base64_encode"
       build_base64_encode_transformation(config)
-    when 'base64_decode'
+    when "base64_decode"
       build_base64_decode_transformation(config)
-    when 'function_based'
+    when "function_based"
       build_function_based_transformation(config, transformation_config)
     else
       raise UnknownTransformationTypeError,
@@ -96,38 +96,38 @@ class YamlTransformationLoader
 
   def build_regex_transformation(config, transformation_config)
     YamlTransformations::RegexTransformation.new(
-      name: config['name'],
-      description: config['description'],
-      version: config['version'],
-      pattern: transformation_config.dig('config', 'pattern'),
-      replacement: transformation_config.dig('config', 'replacement'),
-      flags: transformation_config.dig('config', 'flags') || []
+      name: config["name"],
+      description: config["description"],
+      version: config["version"],
+      pattern: transformation_config.dig("config", "pattern"),
+      replacement: transformation_config.dig("config", "replacement"),
+      flags: transformation_config.dig("config", "flags") || []
     )
   end
 
   def build_base64_encode_transformation(config)
     YamlTransformations::Base64EncodeTransformation.new(
-      name: config['name'],
-      description: config['description'],
-      version: config['version']
+      name: config["name"],
+      description: config["description"],
+      version: config["version"]
     )
   end
 
   def build_base64_decode_transformation(config)
     YamlTransformations::Base64DecodeTransformation.new(
-      name: config['name'],
-      description: config['description'],
-      version: config['version']
+      name: config["name"],
+      description: config["description"],
+      version: config["version"]
     )
   end
 
   def build_function_based_transformation(config, transformation_config)
     YamlTransformations::FunctionBasedTransformation.new(
-      name: config['name'],
-      description: config['description'],
-      version: config['version'],
-      template: transformation_config.dig('config', 'template'),
-      allowed_functions: transformation_config.dig('config', 'allowed_functions') || [],
+      name: config["name"],
+      description: config["description"],
+      version: config["version"],
+      template: transformation_config.dig("config", "template"),
+      allowed_functions: transformation_config.dig("config", "allowed_functions") || [],
       function_registry: @function_registry
     )
   end

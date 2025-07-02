@@ -69,7 +69,7 @@ module Transformations
             description: "Regex flags (i=ignorecase, m=multiline, x=extended)"
           }
         ),
-        required: super[:required] + ["pattern", "replacement"]
+        required: super[:required] + [ "pattern", "replacement" ]
       )
     end
 
@@ -81,9 +81,9 @@ module Transformations
 
     def parse_flags(flags)
       flag_mapping = {
-        'i' => Regexp::IGNORECASE,
-        'm' => Regexp::MULTILINE,
-        'x' => Regexp::EXTENDED
+        "i" => Regexp::IGNORECASE,
+        "m" => Regexp::MULTILINE,
+        "x" => Regexp::EXTENDED
       }
 
       flags.reduce(0) do |combined, flag|

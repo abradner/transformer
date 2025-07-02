@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'base64'
+require "base64"
 
 module Transformations
   # Base64 encoding transformation
@@ -32,7 +32,7 @@ module Transformations
         properties: super[:properties].merge(
           encoding: {
             type: "string",
-            enum: ["strict", "urlsafe"],
+            enum: [ "strict", "urlsafe" ],
             default: "strict"
           }
         )

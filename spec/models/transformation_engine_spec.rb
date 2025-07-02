@@ -89,7 +89,7 @@ RSpec.describe TransformationEngine, type: :model do
 
     def validate_input(input)
       if input.nil? || input.empty?
-        ValidationResult.new(false, ["Input cannot be empty"])
+        ValidationResult.new(false, [ "Input cannot be empty" ])
       else
         ValidationResult.new(true, [])
       end
@@ -102,7 +102,7 @@ RSpec.describe TransformationEngine, type: :model do
           name: { type: "string" },
           description: { type: "string" }
         },
-        required: ["name"]
+        required: [ "name" ]
       }
     end
   end

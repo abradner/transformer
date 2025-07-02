@@ -28,7 +28,7 @@ module YamlTransformations
     def metadata
       super.merge(
         version: @yaml_version,
-        source: 'yaml_configuration'
+        source: "yaml_configuration"
       )
     end
   end

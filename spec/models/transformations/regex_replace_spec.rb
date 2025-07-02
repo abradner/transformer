@@ -41,7 +41,7 @@ RSpec.describe Transformations::RegexReplace, type: :model do
         described_class.new(
           pattern: "HELLO",
           replacement: "Hi",
-          flags: ["i"]
+          flags: [ "i" ]
         )
       end
 
@@ -89,7 +89,7 @@ RSpec.describe Transformations::RegexReplace, type: :model do
         described_class.new(
           pattern: "test",
           replacement: "demo",
-          flags: ["invalid", "z"]
+          flags: [ "invalid", "z" ]
         )
       end
 

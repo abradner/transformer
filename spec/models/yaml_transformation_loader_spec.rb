@@ -9,7 +9,7 @@ RSpec.describe YamlTransformationLoader, type: :model do
       name: "test_transformation"
       description: "A test transformation for specs"
       version: "1.0"
-      
+
       transformations:
         - type: "regex_replace"
           config:
@@ -72,7 +72,7 @@ RSpec.describe YamlTransformationLoader, type: :model do
           name: "invalid_type"
           description: "Has unknown transformation type"
           version: "1.0"
-          
+
           transformations:
             - type: "unknown_transformer"
               config: {}
@@ -88,7 +88,7 @@ RSpec.describe YamlTransformationLoader, type: :model do
   end
 
   describe '#load_from_file' do
-    let(:temp_file) { Tempfile.new(['test_transform', '.yml']) }
+    let(:temp_file) { Tempfile.new([ 'test_transform', '.yml' ]) }
 
     before do
       temp_file.write(sample_yaml_content)
@@ -119,13 +119,13 @@ RSpec.describe YamlTransformationLoader, type: :model do
         name: "log_enhancer"
         description: "Enhance log readability with multiple steps"
         version: "1.0"
-        
+
         transformations:
           - type: "regex_replace"
             config:
               pattern: '(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2})'
               replacement: '\\1 \\2'
-          
+        #{'  '}
           - type: "regex_replace"
             config:
               pattern: '\\b(ERROR|FATAL)\\b'
@@ -152,16 +152,16 @@ RSpec.describe YamlTransformations::FunctionBasedTransformation, type: :model do
         name: "k8s_secret_decoder"
         description: "Decode base64 secrets from Kubernetes YAML"
         version: "1.0"
-        
+
         transformations:
           - type: "function_based"
             config:
               template: |
-                {{ input 
-                   | split_lines 
-                   | map_values(base64_decode) 
+                {{ input#{' '}
+                   | split_lines#{' '}
+                   | map_values(base64_decode)#{' '}
                    | join_lines }}
-              
+        #{'      '}
               allowed_functions:
                 - split_lines
                 - map_values

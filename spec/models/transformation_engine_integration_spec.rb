@@ -49,7 +49,7 @@ RSpec.describe 'Transformation Engine Integration', type: :model do
       original = "Hello World!"
 
       # Chain: text -> base64 encode -> base64 decode -> back to original
-      result = engine.apply_chain(["base64_encode", "base64_decode"], original)
+      result = engine.apply_chain([ "base64_encode", "base64_decode" ], original)
       expect(result).to eq(original)
     end
   end
