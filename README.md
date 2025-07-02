@@ -270,3 +270,6 @@ See [goals.md](./goals.md) for detailed project tracking and current priorities.
 2. Update goals.md with intended changes
 3. Maintain documentation currency
 4. Use conventional commit messages
+
+### License
+This project is licensed under the Mozilla Public License 2.0 (MPL-2.0). See the [LICENSE](LICENSE) file for details.
