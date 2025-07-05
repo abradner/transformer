@@ -154,7 +154,7 @@ A tool for common string transformations including:
 - [x] Add `rake transformer:list` to show available transformations
 
 ### Story 2.7: Persistence Layer
-**Status**: Not Started
+**Status**: Deferred until after 4.3
 - [ ] Transformation model and database design
 - [ ] CRUD operations for custom transformations
 - [ ] Named transformation management
@@ -164,19 +164,43 @@ A tool for common string transformations including:
 ---
 
 ## Epic 3: API Interface
-**Status**: Not Started
+**Status**: In Progress
 
 ### Story 3.1: REST API Foundation
-**Status**: Not Started
-- [ ] API authentication strategy
-- [ ] Transformation endpoints (apply, list, CRUD)
-- [ ] Request/response format design
-- [ ] Error handling and validation
-- [ ] API documentation (OpenAPI/Swagger)
+**Status**: In Progress
+- [ ] Design request/response format for API endpoints
+- [ ] Implement `GET /api/v1/transformations` to list available YAML-based transformations
+- [ ] Implement `POST /api/v1/transform` to apply a named transformation (one-shot)
+- [ ] Implement basic error handling and validation
+- [ ] Add comprehensive test coverage for API endpoints
 
-### Story 3.2: Batch Processing
+### Story 3.2: Real-time Transformation API (WebSocket)
+**Status**: Up Next
+- [ ] Design WebSocket message format for real-time transformations
+- [ ] Implement ActionCable channel for live transformation updates
+- [ ] Add WebSocket authentication and connection management
+- [ ] Implement real-time error handling and validation
+- [ ] Add comprehensive test coverage for WebSocket functionality
+
+### Story 3.3: API Authentication & Security
+**Status**: Deferred until after: 4.5
+- [ ] Implement API key authentication for REST endpoints
+- [ ] Add rate limiting and throttling
+- [ ] Implement CORS configuration for browser access
+- [ ] Add security headers and validation
+- [ ] Create API documentation (OpenAPI/Swagger)
+
+### Story 3.4: CRUD Operations for Custom Transformations
 **Status**: Not Started
-- [ ] Multiple string processing
+- [ ] Implement `POST /api/v1/transformations` to create custom transformations
+- [ ] Implement `PUT /api/v1/transformations/:id` to update transformations
+- [ ] Implement `DELETE /api/v1/transformations/:id` to delete transformations
+- [ ] Add validation for custom transformation YAML
+- [ ] Implement transformation import/export endpoints
+
+### Story 3.5: Batch Processing
+**Status**: Not Started
+- [ ] Multiple string processing endpoints
 - [ ] File upload processing
 - [ ] Async job processing for large transformations
 - [ ] Progress tracking and status endpoints
@@ -184,41 +208,63 @@ A tool for common string transformations including:
 ---
 
 ## Epic 4: Browser Interface
-**Status**: Not Started
+**Status**: In Progress
 
-### Story 4.1: Basic UI Framework
-**Status**: Not Started
-- [ ] Application layout and navigation
-- [ ] Transformation management pages
-- [ ] Authentication UI (if needed)
-- [ ] Responsive design foundation
+### Story 4.1: Basic UI Framework & Layout
+**Status**: Up Next after 3.2
+- [ ] Create a main controller and root route for the application
+- [ ] Implement basic application layout (header, navigation, content area)
+- [ ] Set up Turbo and Stimulus integration
+- [ ] Create basic CSS structure and styling
+- [ ] Add responsive design foundation
 
-### Story 4.2: Live Editor Interface (Transformation Playground)
+### Story 4.2: Transformation Playground (Core UI)
 **Status**: Not Started
-- [ ] Pattern crafting component (regex/YAML editor)
-- [ ] Input text area component with sample data support
-- [ ] Output text area component with real-time preview
-- [ ] Transformation selection dropdown for built-in and saved transformations
-- [ ] Real-time transformation preview as user types
-- [ ] Save/load transformation patterns from the playground
-- [ ] Error display and validation feedback in editor
+- [ ] Create playground page with input/output text areas
+- [ ] Implement transformation selection dropdown (YAML-based only)
+- [ ] Add basic form validation and error display
+- [ ] Implement static transformation preview (without real-time)
+- [ ] Add sample data loading for testing transformations
 
-### Story 4.3: Transformation Management & History
+### Story 4.3: Real-time Transformation Integration
 **Status**: Not Started
-- [ ] Save transformation patterns with sample data for documentation
-- [ ] Transformation history/undo functionality within editor session
-- [ ] Browse and manage saved transformations
-- [ ] Import/export transformation definitions
-- [ ] Transformation versioning and comparison
+- [ ] Integrate ActionCable WebSocket for real-time updates
+- [ ] Implement real-time transformation preview as user types
+- [ ] Add debouncing to prevent excessive WebSocket calls
+- [ ] Implement connection status indicators
+- [ ] Add fallback to REST API if WebSocket fails
 
-### Story 4.4: Enhanced UX Features
+### Story 4.4: Enhanced Playground Features
 **Status**: Not Started
-- [ ] Syntax highlighting for patterns (regex/YAML)
-- [ ] Error highlighting and validation feedback
-- [ ] Auto-completion for transformation functions
-- [ ] Keyboard shortcuts and productivity features
-- [ ] Responsive design for mobile/tablet use
-- [ ] Share transformation links with sample data
+- [ ] Add syntax highlighting for input/output text areas
+- [ ] Implement transformation history/undo within session
+- [ ] Add export functionality for transformation results
+- [ ] Implement keyboard shortcuts for common actions
+- [ ] Add mobile/tablet responsive design
+
+### Story 4.5: Transformation Management Interface
+**Status**: Not Started
+- [ ] Create transformation browsing and management pages
+- [ ] Implement transformation creation/editing forms
+- [ ] Add transformation testing interface
+- [ ] Implement transformation import/export UI
+- [ ] Add transformation versioning and comparison views
+
+### Story 4.6: Authentication & User Management UI
+**Status**: Not Started
+- [ ] Implement user registration and login forms
+- [ ] Add user dashboard for managing personal transformations
+- [ ] Implement user profile management
+- [ ] Add user-specific transformation organization
+- [ ] Implement sharing and collaboration features
+
+### Story 4.7: Advanced UX Features
+**Status**: Not Started
+- [ ] Add drag-and-drop file upload for batch processing
+- [ ] Implement advanced error highlighting and validation feedback
+- [ ] Add auto-completion for transformation functions
+- [ ] Implement transformation result sharing via URLs
+- [ ] Add dark mode and theme customization
 
 ---
 
@@ -341,7 +387,7 @@ npm run test:coverage
 ---
 
 ## History Log
-- **2025-07-05**: Created Epic 7 to address documentation and implementation drift.
+- **2025-07-05**: Pivoted to API and UI foundation (Epic 3 & 4) to enable early application use, deferring persistence.
 - **2025-07-05**: Integrated RuboCop with commit validation system, replacing custom quality checks with professional linting
 - **2025-07-05**: Added commit validation and review tooling with rake tasks `commit:review` and `commit:message`
 - **2025-07-02**: Added line_range filtering to function_based transformations for targeted line processing
