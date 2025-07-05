@@ -44,7 +44,7 @@ RSpec.describe RubocopAnalyzer, type: :service do
       files = [ 'app/models/test.rb' ]
 
       # Mock RuboCop execution failure
-      allow(analyzer).to receive(:`).and_raise(StandardError, 'Command failed')
+      allow(Open3).to receive(:capture3).and_raise(StandardError, 'Command failed')
       allow(File).to receive(:exist?).with('app/models/test.rb').and_return(true)
 
       result = analyzer.analyze_files(files)
