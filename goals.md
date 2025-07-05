@@ -67,6 +67,23 @@ A tool for common string transformations including:
 
 **Completed**: Comprehensive commit validation and review tooling with rake tasks `commit:review` and `commit:message`, service-based architecture, goal alignment checking, code quality analysis, and conventional commit message generation.
 
+### Story 1.6: Integrate RuboCop with Commit Validation
+**Status**: ✅ Complete
+- [x] Replace custom code quality checks with RuboCop integration
+- [x] Configure RuboCop to run on changed files only
+- [x] Parse RuboCop output into our ReviewResult format
+- [x] Remove redundant code quality analysis from CodeQualityAnalyzer
+- [x] Update tests to work with RuboCop integration
+- [x] Ensure Zeitwerk-specific validations still work (may need custom rules)
+
+**Technical Details**:
+- **RuboCop Integration**: Use existing `.rubocop.yml` configuration
+- **Selective Analysis**: Run RuboCop only on changed files for performance
+- **Output Parsing**: Convert RuboCop JSON output to our quality issue format
+- **Performance**: Faster analysis using battle-tested linting rules
+
+**Completed**: Successfully integrated RuboCop with commit validation system, replacing custom quality checks with professional linting while maintaining custom Zeitwerk and YAML analysis. System now provides precise issue locations, cop names, and intelligent suggestions based on detected patterns.
+
 ---
 
 ## Epic 2: Core Data Model & Transformations
@@ -313,6 +330,7 @@ npm run test:coverage
 ---
 
 ## History Log
+- **2025-07-05**: Integrated RuboCop with commit validation system, replacing custom quality checks with professional linting
 - **2025-07-05**: Added commit validation and review tooling with rake tasks `commit:review` and `commit:message`
 - **2025-07-02**: Added line_range filtering to function_based transformations for targeted line processing
 - **2025-07-02**: Implemented K8s Secret decoder using line_range to target only data: section

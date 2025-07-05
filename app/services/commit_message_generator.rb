@@ -26,23 +26,23 @@ class CommitMessageGenerator
   def determine_commit_type
     files = @changes.map(&:file).uniq
 
-    return 'feat' if files.any? { |f| f.start_with?('app/') && !f.include?('spec/') }
-    return 'test' if files.all? { |f| f.include?('spec/') || f.include?('test/') }
-    return 'docs' if files.all? { |f| f.end_with?('.md') || f.include?('docs/') }
-    return 'chore' if files.any? { |f| f.start_with?('lib/tasks/') }
-    return 'refactor' if has_only_modifications?
-    return 'fix' if seems_like_bug_fix?
+    return "feat" if files.any? { |f| f.start_with?("app/") && !f.include?("spec/") }
+    return "test" if files.all? { |f| f.include?("spec/") || f.include?("test/") }
+    return "docs" if files.all? { |f| f.end_with?(".md") || f.include?("docs/") }
+    return "chore" if files.any? { |f| f.start_with?("lib/tasks/") }
+    return "refactor" if has_only_modifications?
+    return "fix" if seems_like_bug_fix?
 
-    'feat' # default
+    "feat" # default
   end
 
   def determine_scope
     files = @changes.map(&:file).uniq
 
-    return 'validation' if files.any? { |f| f.include?('commit') || f.include?('validation') }
-    return 'yaml' if files.any? { |f| f.include?('yaml') || f.include?('transformations') }
-    return 'engine' if files.any? { |f| f.include?('transformation_engine') }
-    return 'tasks' if files.any? { |f| f.start_with?('lib/tasks/') }
+    return "validation" if files.any? { |f| f.include?("commit") || f.include?("validation") }
+    return "yaml" if files.any? { |f| f.include?("yaml") || f.include?("transformations") }
+    return "engine" if files.any? { |f| f.include?("transformation_engine") }
+    return "tasks" if files.any? { |f| f.start_with?("lib/tasks/") }
 
     nil
   end
@@ -92,14 +92,14 @@ class CommitMessageGenerator
     return "update project goals" unless story
 
     # Extract the main purpose from story title
-    if story.include?('Commit Validation')
+    if story.include?("Commit Validation")
       "add commit validation and review tooling"
-    elsif story.include?('YAML')
+    elsif story.include?("YAML")
       "enhance YAML transformation system"
-    elsif story.include?('Testing')
+    elsif story.include?("Testing")
       "improve testing infrastructure"
     else
-      story.split(':').last&.strip&.downcase || "update codebase"
+      story.split(":").last&.strip&.downcase || "update codebase"
     end
   end
 
@@ -111,8 +111,8 @@ class CommitMessageGenerator
   end
 
   def seems_like_bug_fix?
-    content = @changes.map(&:content).join(' ')
-    fix_keywords = ['fix', 'bug', 'error', 'issue', 'correct', 'resolve']
+    content = @changes.map(&:content).join(" ")
+    fix_keywords = [ "fix", "bug", "error", "issue", "correct", "resolve" ]
     fix_keywords.any? { |keyword| content.downcase.include?(keyword) }
   end
 
@@ -121,11 +121,11 @@ class CommitMessageGenerator
     deletions = @changes.count { |c| c.type == :deletion }
 
     if additions > deletions
-      'add'
+      "add"
     elsif deletions > additions
-      'remove'
+      "remove"
     else
-      'update'
+      "update"
     end
   end
 end

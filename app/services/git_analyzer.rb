@@ -1,13 +1,18 @@
 # frozen_string_literal: true
 
+require "open3"
+
 # Analyzes git worktree changes including staged and unstaged modifications
 class GitAnalyzer
   def get_worktree_diff
     # Get both staged and unstaged changes
-    staged_diff = `git diff --cached HEAD`
-    unstaged_diff = `git diff HEAD`
+    staged_diff, staged_error, staged_status = Open3.capture3("git diff --cached HEAD")
+    raise "Git command failed: #{staged_error.strip}" unless staged_status.success?
 
-    combined_diff = [staged_diff, unstaged_diff].reject(&:empty?).join("\n")
+    unstaged_diff, unstaged_error, unstaged_status = Open3.capture3("git diff HEAD")
+    raise "Git command failed: #{unstaged_error.strip}" unless unstaged_status.success?
+
+    combined_diff = [ staged_diff, unstaged_diff ].reject(&:empty?).join("\n")
 
     return [] if combined_diff.empty?
 
@@ -16,8 +21,14 @@ class GitAnalyzer
 
   def get_changed_files
     # Get list of all changed files (staged and unstaged)
-    files = `git diff --name-only HEAD`.split("\n")
-    files += `git diff --cached --name-only HEAD`.split("\n")
+    unstaged_files_str, unstaged_error, unstaged_status = Open3.capture3("git diff --name-only HEAD")
+    raise "Git command failed: #{unstaged_error.strip}" unless unstaged_status.success?
+
+    staged_files_str, staged_error, staged_status = Open3.capture3("git diff --cached --name-only HEAD")
+    raise "Git command failed: #{staged_error.strip}" unless staged_status.success?
+
+    files = unstaged_files_str.split("\n")
+    files += staged_files_str.split("\n")
     files.uniq
   end
 
@@ -28,10 +39,10 @@ class GitAnalyzer
     current_file = nil
 
     diff_text.split("\n").each do |line|
-      if line.start_with?('diff --git')
+      if line.start_with?("diff --git")
         # Extract filename from: diff --git a/file.rb b/file.rb
-        current_file = line.split(' ').last.sub('b/', '')
-      elsif line.start_with?('+') && !line.start_with?('+++')
+        current_file = line.split(" ").last.sub("b/", "")
+      elsif line.start_with?("+") && !line.start_with?("+++")
         # Addition
         changes << GitChange.new(
           file: current_file,
@@ -39,7 +50,7 @@ class GitAnalyzer
           content: line[1..-1],
           line: line
         )
-      elsif line.start_with?('-') && !line.start_with?('---')
+      elsif line.start_with?("-") && !line.start_with?("---")
         # Deletion
         changes << GitChange.new(
           file: current_file,
@@ -66,18 +77,18 @@ class GitChange
   end
 
   def ruby_file?
-    file&.end_with?('.rb')
+    file&.end_with?(".rb")
   end
 
   def test_file?
-    file&.include?('spec/') || file&.end_with?('_test.rb')
+    file&.include?("spec/") || file&.end_with?("_test.rb")
   end
 
   def yaml_file?
-    file&.end_with?('.yml', '.yaml')
+    file&.end_with?(".yml", ".yaml")
   end
 
   def config_file?
-    file&.start_with?('config/')
+    file&.start_with?("config/")
   end
 end

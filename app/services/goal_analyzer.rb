@@ -2,7 +2,7 @@
 
 # Analyzes changes against current project goals and stories
 class GoalAnalyzer
-  GOALS_FILE = Rails.root.join('goals.md')
+  GOALS_FILE = Rails.root.join("goals.md")
 
   def check_alignment(changes)
     current_story = extract_current_story
@@ -57,18 +57,18 @@ class GoalAnalyzer
 
   def extract_technologies(section)
     techs = []
-    techs << 'rake' if section.include?('rake')
-    techs << 'git' if section.include?('git')
-    techs << 'rspec' if section.include?('RSpec') || section.include?('test')
-    techs << 'yaml' if section.include?('YAML') || section.include?('yml')
+    techs << "rake" if section.include?("rake")
+    techs << "git" if section.include?("git")
+    techs << "rspec" if section.include?("RSpec") || section.include?("test")
+    techs << "yaml" if section.include?("YAML") || section.include?("yml")
     techs
   end
 
   def extract_file_areas(section)
     areas = []
-    areas << 'lib/tasks' if section.include?('rake')
-    areas << 'spec' if section.include?('test') || section.include?('RSpec')
-    areas << 'app/services' if section.include?('service') || section.include?('analysis')
+    areas << "lib/tasks" if section.include?("rake")
+    areas << "spec" if section.include?("test") || section.include?("RSpec")
+    areas << "app/services" if section.include?("service") || section.include?("analysis")
     areas
   end
 
