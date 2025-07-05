@@ -57,17 +57,21 @@ RSpec.describe 'transformer rake tasks', type: :task do
     end
 
     context 'with a file having invalid syntax' do
-      it 'prints a syntax error message' do
+      it 'prints a syntax error message and exits with a non-zero status' do
         invalid_yaml = "name: 'invalid\ndescription: 'bad syntax'"
         allow(Dir).to receive(:glob).with(Rails.root.join('config', 'transformations', '*.yml')).and_return([ '/path/to/invalid_syntax.yml' ])
         allow(File).to receive(:read).with('/path/to/invalid_syntax.yml').and_return(invalid_yaml)
 
-        expect { Rake::Task['transformer:validate'].invoke }.to output(/ERROR: Invalid YAML syntax in/).to_stdout
+        expect do
+          expect { Rake::Task['transformer:validate'].invoke }.to output(/ERROR: Invalid YAML syntax in/).to_stdout
+        end.to raise_error(SystemExit) do |error|
+          expect(error.status).to eq(1)
+        end
       end
     end
 
     context 'with a file having invalid schema' do
-      it 'prints a schema error message' do
+      it 'prints a schema error message and exits with a non-zero status' do
         invalid_schema_yaml = {
           'name' => 'invalid_schema',
           'description' => 'Missing version and transformations'
@@ -76,8 +80,12 @@ RSpec.describe 'transformer rake tasks', type: :task do
         allow(Dir).to receive(:glob).with(Rails.root.join('config', 'transformations', '*.yml')).and_return([ '/path/to/invalid_schema.yml' ])
         allow(File).to receive(:read).with('/path/to/invalid_schema.yml').and_return(invalid_schema_yaml)
 
-        # The new gem provides more specific error messages
-        expect { Rake::Task['transformer:validate'].invoke }.to output(/ERROR: Schema validation failed for .*invalid_schema.yml.*required.*version.*transformations/m).to_stdout
+        expect do
+          # The new gem provides more specific error messages
+          expect { Rake::Task['transformer:validate'].invoke }.to output(/ERROR: Schema validation failed for .*invalid_schema.yml.*required.*version.*transformations/m).to_stdout
+        end.to raise_error(SystemExit) do |error|
+          expect(error.status).to eq(1)
+        end
       end
     end
   end

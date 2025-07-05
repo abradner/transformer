@@ -4,6 +4,15 @@ require 'rails_helper'
 require 'rake'
 
 RSpec.describe 'Commit Validation Rake Tasks', type: :task do
+  # Helper to suppress stdout for a block of code
+  def with_suppressed_stdout
+    original_stdout = $stdout.clone
+    $stdout.reopen(File.new('/dev/null', 'w'))
+    yield
+  ensure
+    $stdout.reopen(original_stdout)
+  end
+
   before do
     Rake::Task['commit:review'].reenable
     Rake::Task['commit:message'].reenable
@@ -19,7 +28,9 @@ RSpec.describe 'Commit Validation Rake Tasks', type: :task do
         double('reviewer', analyze_changes: ReviewResult.no_changes)
       )
 
-      expect { Rake::Task['commit:review'].invoke }.not_to raise_error
+      with_suppressed_stdout do
+        expect { Rake::Task['commit:review'].invoke }.not_to raise_error
+      end
     end
   end
 
@@ -33,7 +44,9 @@ RSpec.describe 'Commit Validation Rake Tasks', type: :task do
         double('reviewer', generate_commit_message: 'feat: add new feature')
       )
 
-      expect { Rake::Task['commit:message'].invoke }.not_to raise_error
+      with_suppressed_stdout do
+        expect { Rake::Task['commit:message'].invoke }.not_to raise_error
+      end
     end
   end
 end
