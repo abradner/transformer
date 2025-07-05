@@ -7,7 +7,7 @@ RSpec.describe RubocopAnalyzer, type: :service do
 
   describe '#analyze_files' do
     it 'returns empty result for no Ruby files' do
-      files = ['config/test.yml', 'README.md']
+      files = [ 'config/test.yml', 'README.md' ]
 
       result = analyzer.analyze_files(files)
 
@@ -25,7 +25,7 @@ RSpec.describe RubocopAnalyzer, type: :service do
     end
 
     it 'handles RuboCop execution with mocked output' do
-      files = ['app/models/test.rb']
+      files = [ 'app/models/test.rb' ]
 
       # Mock the system command execution
       allow(analyzer).to receive(:`).and_return(sample_rubocop_json)
@@ -40,7 +40,7 @@ RSpec.describe RubocopAnalyzer, type: :service do
     end
 
     it 'handles RuboCop execution errors gracefully' do
-      files = ['app/models/test.rb']
+      files = [ 'app/models/test.rb' ]
 
       # Mock RuboCop execution failure
       allow(analyzer).to receive(:`).and_raise(StandardError, 'Command failed')
@@ -96,7 +96,7 @@ RSpec.describe RubocopAnalyzer, type: :service do
     end
 
     it 'provides generic suggestion when no specific patterns match' do
-      issues = ['Some/UnknownCop: Unknown issue']
+      issues = [ 'Some/UnknownCop: Unknown issue' ]
 
       suggestions = analyzer.send(:generate_suggestions, issues)
 

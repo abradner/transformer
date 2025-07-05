@@ -45,7 +45,7 @@ class CodeQualityAnalyzer
     issues = []
 
     ruby_changes.each do |change|
-      next unless change.type == :addition && change.content.include?('class ')
+      next unless change.type == :addition && change.content.include?("class ")
 
       file = change.file
       content = change.content
@@ -55,7 +55,7 @@ class CodeQualityAnalyzer
       next unless class_match
 
       class_name = class_match[1]
-      expected_file = class_name.underscore + '.rb'
+      expected_file = class_name.underscore + ".rb"
       actual_file = File.basename(file)
 
       unless actual_file == expected_file
@@ -63,8 +63,8 @@ class CodeQualityAnalyzer
       end
 
       # Check for namespace consistency
-      if file.include?('/')
-        namespace_path = File.dirname(file).split('/').map(&:camelize).join('::')
+      if file.include?("/")
+        namespace_path = File.dirname(file).split("/").map(&:camelize).join("::")
         unless content.include?("module #{namespace_path}")
           issues << "❌ Missing namespace module #{namespace_path} in #{file}"
         end
@@ -96,13 +96,13 @@ class CodeQualityAnalyzer
     ruby_files = changes.select(&:ruby_file?).map(&:file).uniq
     test_files = changes.select(&:test_file?).map(&:file).uniq
 
-    app_files = ruby_files.select { |f| f.start_with?('app/') }
+    app_files = ruby_files.select { |f| f.start_with?("app/") }
 
     if app_files.any? && test_files.empty?
       suggestions << "🧪 Consider adding tests for new application code"
     end
 
-    if changes.any?(&:yaml_file?) && !test_files.any? { |f| f.include?('yaml') }
+    if changes.any?(&:yaml_file?) && !test_files.any? { |f| f.include?("yaml") }
       suggestions << "🧪 Consider adding tests for YAML configuration changes"
     end
 
