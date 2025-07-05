@@ -41,8 +41,7 @@ namespace :transformer do
     if errors.empty?
       puts "All transformation files are valid."
     else
-      puts errors.join("\n")
-      exit 1 # Fail the rake task if there are errors
+      abort(errors.join("\n")) # Fail the rake task if there are errors
     end
   end
 end
