@@ -20,21 +20,30 @@ graph TB
         B --> G[CommitMessageGenerator]
     end
     
+    subgraph "Quality Analysis"
+        F --> H[RubocopAnalyzer]
+        H --> I[RuboCop JSON Output]
+        F --> J[Custom Zeitwerk Checks]
+        F --> K[YAML Validation]
+    end
+    
     subgraph "Data Sources"
-        D --> H[Git Worktree]
-        E --> I[goals.md]
-        F --> J[Ruby/YAML Files]
+        D --> L[Git Worktree]
+        E --> M[goals.md]
+        I --> N[.rubocop.yml Config]
+        J --> O[Ruby Files]
+        K --> P[YAML Files]
     end
     
     subgraph "Output Models"
-        B --> K[ReviewResult]
-        G --> L[Conventional Commit Message]
+        B --> Q[ReviewResult]
+        G --> R[Conventional Commit Message]
     end
     
     subgraph "Supporting Classes"
-        D --> M[GitChange]
-        E --> N[GoalAlignment]
-        F --> O[CodeQualityResult]
+        D --> S[GitChange]
+        E --> T[GoalAlignment]
+        F --> U[CodeQualityResult]
     end
 ```
 
@@ -133,65 +142,45 @@ graph TB
    end
    ```
 
-### 4. CodeQualityAnalyzer (Quality Checks)
+### 4. CodeQualityAnalyzer (Hybrid Analysis)
 
-Performs static analysis on code changes:
+Integrates RuboCop analysis with custom validation checks:
 
 ```mermaid
 graph TB
-    A[Git Changes] --> B{Filter by File Type}
-    B --> C[Ruby Files]
-    B --> D[YAML Files]
+    A[Git Changes] --> B[Extract Ruby Files]
+    A --> C[Extract Other Files]
     
-    C --> E[Ruby Pattern Analysis]
-    C --> F[Zeitwerk Compliance]
-    D --> G[YAML Structure Analysis]
+    B --> D[RubocopAnalyzer]
+    D --> E[Execute RuboCop JSON]
+    E --> F[Parse Offenses]
+    F --> G[Map to Issues]
     
-    E --> H[Anti-patterns]
-    E --> I[Code Smells]
-    F --> J[Naming Violations]
-    F --> K[Namespace Issues]
-    G --> L[Format Issues]
+    C --> H[Custom Analysis]
+    H --> I[Zeitwerk Compliance]
+    H --> J[YAML Structure]
     
-    H --> M[Quality Issues]
-    I --> M
-    J --> M
-    K --> M
-    L --> M
-    
-    N[Change Analysis] --> O[Refactoring Suggestions]
-    N --> P[Testing Suggestions]
-    
-    M --> Q[CodeQualityResult]
-    O --> Q
-    P --> Q
+    G --> K[Combine Results]
+    I --> K
+    J --> K
+    K --> L[Generate Suggestions]
+    L --> M[CodeQualityResult]
 ```
 
-**Quality Checks Performed:**
-
-1. **Ruby Pattern Analysis:**
-   ```ruby
-   # Long methods (>120 chars)
-   issues << "❌ Long method detected" if content.length > 120
-   
-   # TODO comments
-   issues << "❌ TODO comment found" if content.include?('TODO')
-   
-   # Hardcoded strings (>50 chars)
-   issues << "❌ Hardcoded string" if content.match?(/["'][^"']{50,}["']/)
-   ```
-
-2. **Zeitwerk Compliance:**
-   ```ruby
-   # Class name must match filename
-   class_name = content.match(/class\s+(\w+)/)[1]
-   expected_file = class_name.underscore + '.rb'
-   actual_file = File.basename(file)
-   
-   unless actual_file == expected_file
-     issues << "❌ Zeitwerk violation: #{class_name} should be in #{expected_file}"
-   end
-   ```
+**Implementation:**
+```ruby
+def review_changes(changes)
+  ruby_files = extract_changed_ruby_files(changes)
+  rubocop_result = @rubocop_analyzer.analyze_files(ruby_files)
+  custom_issues = analyze_custom_patterns(changes)
+  custom_suggestions = generate_custom_suggestions(changes)
+  
+  CodeQualityResult.new(
+    issues: rubocop_result.issues + custom_issues,
+    suggestions: rubocop_result.suggestions + custom_suggestions
+  )
+end
+```
 
 3. **Namespace Validation:**
    - Checks for missing module declarations in nested paths
@@ -203,43 +192,20 @@ Generates conventional commit messages based on changes and context:
 
 ```mermaid
 graph TB
-    A[Git Changes] --> B[Determine Commit Type]
-    A --> C[Determine Scope]
-    A --> D[Generate Description]
-    E[Goal Analysis] --> D
+    A[Ruby Files] --> B[Filter Existing Files]
+    B --> C[Execute RuboCop]
+    C --> D[Parse JSON Output]
+    D --> E[Map Severity Icons]
+    E --> F[Format Issues]
+    F --> G[Generate Suggestions]
+    G --> H[CodeQualityResult]
     
-    B --> F{File Analysis}
-    F -->|app/ files| G[feat]
-    F -->|spec/ files| H[test]
-    F -->|docs| I[docs]
-    F -->|lib/tasks| J[chore]
-    F -->|modifications| K[refactor]
-    F -->|bug patterns| L[fix]
-    
-    C --> M{Scope Detection}
-    M -->|validation files| N[validation]
-    M -->|yaml files| O[yaml]
-    M -->|engine files| P[engine]
-    M -->|task files| Q[tasks]
-    
-    D --> R{Has Current Story?}
-    R -->|Yes| S[Extract Story Description]
-    R -->|No| T[Generate Generic Description]
-    
-    G --> U[Build Message]
-    H --> U
-    I --> U
-    J --> U
-    K --> U
-    L --> U
-    N --> U
-    O --> U
-    P --> U
-    Q --> U
-    S --> U
-    T --> U
-    
-    U --> V[Conventional Commit Format]
+    subgraph "RuboCop Integration"
+        C --> I[bin/rubocop --format json]
+        I --> J[Handle Exit Codes]
+        J --> K[JSON Response]
+        K --> L[Error Handling]
+    end
 ```
 
 **Message Generation Logic:**
@@ -275,29 +241,29 @@ sequenceDiagram
     participant GoA as GoalAnalyzer
     participant CQA as CodeQualityAnalyzer
     participant RR as ReviewResult
-    
+
     User->>Rake: Execute command
     Rake->>CR: analyze_changes()
-    
+
     CR->>GA: get_worktree_diff()
     GA->>GA: Parse git diff
     GA-->>CR: GitChange[]
-    
+
     CR->>GoA: check_alignment(changes)
     GoA->>GoA: Parse goals.md
     GoA->>GoA: Extract current story
     GoA->>GoA: Analyze file patterns
     GoA-->>CR: GoalAlignment
-    
+
     CR->>CQA: review_changes(changes)
     CQA->>CQA: Analyze Ruby patterns
     CQA->>CQA: Check Zeitwerk compliance
     CQA->>CQA: Generate suggestions
     CQA-->>CR: CodeQualityResult
-    
+
     CR->>RR: new(changes, goal_alignment, quality_issues, suggestions)
     RR-->>CR: ReviewResult
-    
+
     CR-->>Rake: ReviewResult
     Rake->>Rake: Display summary
     Rake->>Rake: Display details
@@ -312,19 +278,19 @@ sequenceDiagram
     participant Rake as rake commit:message
     participant CR as CommitReviewer
     participant CMG as CommitMessageGenerator
-    
+
     User->>Rake: Execute command
     Rake->>CR: generate_commit_message()
-    
+
     CR->>CR: Get git changes
     CR->>CR: Get goal analysis
     CR->>CMG: new(changes, goal_analysis)
-    
+
     CMG->>CMG: determine_commit_type()
     CMG->>CMG: determine_scope()
     CMG->>CMG: generate_description()
     CMG->>CMG: generate_body()
-    
+
     CMG-->>CR: Formatted message
     CR-->>Rake: Commit message
     Rake-->>User: Display message
@@ -340,15 +306,15 @@ graph TB
     B -->|.rb| C{Path contains?}
     B -->|.yml/.yaml| D[YAML File]
     B -->|.md| E[Documentation]
-    
+
     C -->|spec/| F[Test File]
     C -->|app/| G{Subdirectory?}
     C -->|lib/tasks| H[Rake Task]
-    
+
     G -->|models/| I[Model File]
     G -->|services/| J[Service File]
     G -->|controllers/| K[Controller File]
-    
+
     D --> L[Configuration Analysis]
     E --> M[Documentation Analysis]
     F --> N[Test Analysis]
@@ -358,34 +324,53 @@ graph TB
     H --> P[Task Analysis]
 ```
 
-### Quality Issue Severity
 
 ```mermaid
 graph TB
     A[Code Issue] --> B{Type?}
-    
+
     B -->|Zeitwerk Violation| C[❌ CRITICAL]
     B -->|Missing Namespace| C
     B -->|Security Issue| C
-    
+
     B -->|Long Method| D[⚠️ WARNING]
     B -->|Hardcoded String| D
     B -->|Hard Tabs| D
-    
+
     B -->|TODO Comment| E[💡 SUGGESTION]
     B -->|Potential Refactor| E
     B -->|Missing Tests| E
-    
+
     C --> F[Block Commit]
     D --> G[Warn Developer]
     E --> H[Suggest Improvement]
+```
+
+### 5. RuboCop Analyzer
+
+Executes RuboCop analysis on Ruby files:
+
+**Output Format:**
+```ruby
+# RuboCop offense converted to issue format
+"💡 Style/StringLiterals: Prefer double-quoted strings (app/services/analyzer.rb:48:71)"
+```
+
+
+```ruby
+def generate_suggestions(issues)
+  suggestions = []
+  suggestions << "💡 Consider using consistent string quote style" if issues.any? { |i| i.include?('StringLiterals') }
+  suggestions << "💡 Consider breaking long lines" if issues.any? { |i| i.include?('LineLength') }
+  # ... additional pattern matching
+end
 ```
 
 ## Configuration and Customization
 
 ### Thresholds and Constants
 
-```ruby
+
 # CodeQualityAnalyzer
 LONG_METHOD_THRESHOLD = 120
 HARDCODED_STRING_MIN_LENGTH = 50
@@ -454,22 +439,23 @@ The system uses comprehensive RSpec testing:
 graph TB
     A[Integration Tests] --> B[rake task:review]
     A --> C[rake task:message]
-    
+
     D[Unit Tests] --> E[CommitReviewer]
     D --> F[GitAnalyzer]
     D --> G[GoalAnalyzer]
     D --> H[CodeQualityAnalyzer]
     D --> I[CommitMessageGenerator]
-    
+
     J[Model Tests] --> K[ReviewResult]
     J --> L[GitChange]
     J --> M[GoalAlignment]
     J --> N[CodeQualityResult]
-    
+
     O[Edge Case Tests] --> P[Empty Changes]
     O --> Q[Missing Files]
     O --> R[Malformed Input]
 ```
+
 
 ## Future Enhancements
 
@@ -489,11 +475,11 @@ graph TB
     A[Current System] --> B[Plugin Architecture]
     B --> C[External Analyzers]
     B --> D[Custom Rules Engine]
-    
+
     A --> E[CI/CD Integration]
     E --> F[GitHub Actions]
     E --> G[Git Hooks]
-    
+
     A --> H[Metrics & Analytics]
     H --> I[Quality Trends]
     H --> J[Team Dashboard]
@@ -507,7 +493,7 @@ The commit validation system provides a robust, extensible foundation for mainta
 
 The system successfully implements the three core requirements:
 1. **Goal Alignment**: Ensures changes match current project stories
-2. **Code Quality**: Automated detection of common issues and anti-patterns  
+2. **Code Quality**: Automated detection of common issues and anti-patterns
 3. **Commit Generation**: Conventional commits following best practices
 
 This documentation serves as both an architectural reference and a guide for future development and maintenance of the system.
