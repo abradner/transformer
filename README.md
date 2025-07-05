@@ -152,10 +152,10 @@ graph LR
     A[RSpec Specs] --> B[Model Tests]
     B --> C[Integration Tests]
     C --> D[System Tests]
-    
+
     E[Jest Tests] --> F[Component Tests]
     F --> G[Integration Tests]
-    
+
     H[BDD Workflow] --> A
     H --> E
 ```
@@ -170,6 +170,15 @@ bundle exec rspec --format documentation
 
 # Run specific test file
 bundle exec rspec spec/models/sample_yaml_transformations_spec.rb
+```
+
+### Commit Validation & Review
+```bash
+# Review current changes against project goals and code quality
+bundle exec rake commit:review
+
+# Generate conventional commit message based on changes
+bundle exec rake commit:message
 ```
 
 ### Current Test Coverage

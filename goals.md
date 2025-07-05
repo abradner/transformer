@@ -50,6 +50,23 @@ A tool for common string transformations including:
 - [x] Resolve environment compatibility issues
 - [x] Establish testing best practices
 
+### Story 1.5: Commit Validation & Review Tooling
+**Status**: ✅ Complete
+- [x] Create rake task to analyze git diff against main branch
+- [x] Implement commit validation checks (atomic commits, goal alignment)
+- [x] Add code quality review (factoring, Rails best practices)
+- [x] Generate PR description / commit message suggestions
+- [x] Update copilot-instructions.md workflow to include validation step
+- [x] Create comprehensive test coverage for the validation tooling
+
+**Technical Details**:
+- **Git Analysis**: Examine worktree diff including unstaged changes
+- **Goal Alignment**: Check changes against current story/epic context
+- **Quality Checks**: Identify potential refactoring opportunities
+- **Message Generation**: Craft atomic commit messages following conventional commits
+
+**Completed**: Comprehensive commit validation and review tooling with rake tasks `commit:review` and `commit:message`, service-based architecture, goal alignment checking, code quality analysis, and conventional commit message generation.
+
 ---
 
 ## Epic 2: Core Data Model & Transformations
@@ -296,5 +313,9 @@ npm run test:coverage
 ---
 
 ## History Log
+- **2025-07-05**: Added commit validation and review tooling with rake tasks `commit:review` and `commit:message`
+- **2025-07-02**: Added line_range filtering to function_based transformations for targeted line processing
+- **2025-07-02**: Implemented K8s Secret decoder using line_range to target only data: section
+- **2025-07-02**: Created sample YAML transformations library with real-world examples
 - **2025-07-01**: Project initialized, documentation framework established
 - **2025-07-01**: Application requirements defined, epic structure refined

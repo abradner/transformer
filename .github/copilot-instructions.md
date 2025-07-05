@@ -9,10 +9,12 @@
 1. Update `goals.md` with intended action
 2. Write tests (RSpec/Jest) for expected functionality  
 3. Implement well-factored code using appropriate libraries
-4. Update `goals.md` with outcome
-5. Update README/documentation
-6. Update history log in relevant .md files with date and changes
-7. Write a suitable commit message summarizing the story completion
+4. **Run `rake commit:review` to validate changes align with goals and check code quality**
+5. Update `goals.md` with outcome
+6. Update README/documentation
+7. Update history log in relevant .md files with date and changes
+8. **Run `rake commit:message` to generate conventional commit message**
+9. Write a suitable commit message summarizing the story completion
 
 ## Code Quality Standards
 - **Rails**: Expert-level modern practices, leverage Rails 8 features
