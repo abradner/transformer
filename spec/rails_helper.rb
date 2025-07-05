@@ -96,6 +96,11 @@ RSpec.configure do |config|
     name = example.metadata[:full_description].split(/\s+/, 2).join("/").underscore.gsub(/[^\w\/]+/, "_")
     VCR.use_cassette(name) { example.call }
   end
+
+  config.before(:suite) do
+    # Load the Rakefile and tasks
+    Rails.application.load_tasks
+  end
 end
 
 # Configure VCR

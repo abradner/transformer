@@ -4,11 +4,6 @@ require 'rails_helper'
 require 'rake'
 
 RSpec.describe 'transformer rake tasks', type: :task do
-  # Load the Rakefile and tasks
-  before(:all) do
-    Rails.application.load_tasks
-  end
-
   # Re-enable the task before each run so it can be invoked multiple times
   before(:each) do
     Rake::Task['transformer:list'].reenable
