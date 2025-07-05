@@ -6,11 +6,11 @@ require 'rake'
 RSpec.describe 'Commit Validation Rake Tasks', type: :task do
   # Helper to suppress stdout for a block of code
   def with_suppressed_stdout
-    original_stdout = $stdout.clone
-    $stdout.reopen(File.new('/dev/null', 'w'))
+    original_stdout = $stdout
+    $stdout = StringIO.new
     yield
   ensure
-    $stdout.reopen(original_stdout)
+    $stdout = original_stdout
   end
 
   before do
