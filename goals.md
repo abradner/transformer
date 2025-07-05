@@ -275,6 +275,17 @@ A tool for common string transformations including:
 
 ---
 
+## Epic 7: System Audit & Refinement
+**Status**: ✅ Complete
+**Goal**: To resolve discrepancies between documentation and implementation, refactor existing code for clarity and correctness, and ensure the project's foundation is solid before building new features.
+
+### Story 7.1: Correct Commit Validation Documentation
+**Status**: ✅ Complete
+- [ ] Update the Mermaid diagram for `CommitMessageGenerator` in `docs/commit-validation-system.md` to accurately reflect its logic (commit type, scope, and description generation).
+- [ ] Verify the responsibilities of `CodeQualityAnalyzer` post-RuboCop integration and update the documentation to clarify what custom checks (e.g., Zeitwerk, YAML) remain.
+- [ ] Update the `README.md` to correctly describe the `app/services` directory as implemented.
+
+
 ## Architecture Decisions
 
 ### Transformation Engine Design
@@ -330,6 +341,7 @@ npm run test:coverage
 ---
 
 ## History Log
+- **2025-07-05**: Created Epic 7 to address documentation and implementation drift.
 - **2025-07-05**: Integrated RuboCop with commit validation system, replacing custom quality checks with professional linting
 - **2025-07-05**: Added commit validation and review tooling with rake tasks `commit:review` and `commit:message`
 - **2025-07-02**: Added line_range filtering to function_based transformations for targeted line processing

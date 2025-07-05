@@ -144,7 +144,13 @@ graph TB
 
 ### 4. CodeQualityAnalyzer (Hybrid Analysis)
 
-Integrates RuboCop analysis with custom validation checks:
+Integrates RuboCop analysis with custom validation checks for a comprehensive quality review. While RuboCop handles standard Ruby linting, this service adds critical, project-specific validation that RuboCop does not cover by default.
+
+**Key Responsibilities**:
+- **RuboCop Integration**: Delegates all standard Ruby file analysis to `RubocopAnalyzer` for professional, configurable linting.
+- **Custom Zeitwerk Checks**: Ensures new classes and modules adhere to Rails' autoloading conventions, preventing runtime errors. It validates that file names match class names (`user_profile.rb` -> `UserProfile`) and that nested classes exist within corresponding module namespaces.
+- **Custom YAML Validation**: Performs basic structural checks on YAML files, such as flagging the use of hard tabs or excessively long lines, which can indicate formatting issues.
+- **Suggestion Engine**: Provides contextual suggestions, such as reminding developers to add tests for new application code.
 
 ```mermaid
 graph TB
@@ -192,20 +198,20 @@ Generates conventional commit messages based on changes and context:
 
 ```mermaid
 graph TB
-    A[Ruby Files] --> B[Filter Existing Files]
-    B --> C[Execute RuboCop]
-    C --> D[Parse JSON Output]
-    D --> E[Map Severity Icons]
-    E --> F[Format Issues]
-    F --> G[Generate Suggestions]
-    G --> H[CodeQualityResult]
+    A[Git Changes] --> C{Determine Type}
+    B[Goal Analysis] --> D{Determine Scope}
     
-    subgraph "RuboCop Integration"
-        C --> I[bin/rubocop --format json]
-        I --> J[Handle Exit Codes]
-        J --> K[JSON Response]
-        K --> L[Error Handling]
-    end
+    C --> E[Commit Type]
+    D --> F[Commit Scope]
+    
+    A --> G{Generate Description}
+    B --> G
+    
+    G --> H[Commit Description]
+    
+    E --> I[Conventional Commit Message]
+    F --> I
+    H --> I
 ```
 
 **Message Generation Logic:**

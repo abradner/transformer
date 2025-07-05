@@ -132,7 +132,7 @@ app/
 │   ├── controllers/    # Stimulus controllers
 │   └── __tests__/      # Jest test setup
 ├── jobs/               # Background jobs
-└── services/           # Business logic services (planned)
+└── services/           # Business logic services
 
 config/transformations/          # Sample YAML transformations
 ├── k8s_secret_decoder.yml      # Kubernetes Secret base64 decoder
