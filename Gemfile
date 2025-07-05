@@ -59,6 +59,9 @@ group :development, :test do
 
   gem "factory_bot_rails", "~> 6.4"
   gem "faker", "~> 3.5"
+
+  # For validating YAML transformation files against a JSON Schema
+  gem "json_schemer", "~> 2.4"
 end
 
 group :development do

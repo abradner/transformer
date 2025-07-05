@@ -53,6 +53,22 @@ jobs:
       - name: Lint code for consistent style
         run: bin/rubocop -f github
 
+  validate_transformers:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: mise.toml
+          bundler-cache: true
+
+      - name: Validate Transformers
+        run: bundle exec rake transformer:list transformer:validate
+
+
   test:
     runs-on: ubuntu-latest
 

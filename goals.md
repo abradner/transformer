@@ -147,11 +147,11 @@ A tool for common string transformations including:
 **Completed**: Complete YAML sample transformations library with practical real-world examples including K8s Secret decoding, log processing, and pattern-based line filtering.
 
 ### Story 2.6: Transformation Validation & Tooling
-**Status**: 📋 Planning
-- [ ] Create YAML schema validation using JSON Schema
-- [ ] Add YAML syntax error reporting with line numbers
-- [ ] Build `rake transformer:validate` task for testing YAML files
-- [ ] Add `rake transformer:list` to show available transformations
+**Status**: ✅ Complete
+- [x] Create YAML schema validation using JSON Schema
+- [x] Add YAML syntax error reporting with line numbers
+- [x] Build `rake transformer:validate` task for testing YAML files
+- [x] Add `rake transformer:list` to show available transformations
 
 ### Story 2.7: Persistence Layer
 **Status**: Not Started
