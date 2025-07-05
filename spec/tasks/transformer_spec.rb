@@ -54,7 +54,7 @@ RSpec.describe 'transformer rake tasks', type: :task do
           ]
         }.to_yaml
 
-        allow(Dir).to receive(:glob).with(Rails.root.join('config', 'transformations', '*.yml')).and_return(['/path/to/valid.yml'])
+        allow(Dir).to receive(:glob).with(Rails.root.join('config', 'transformations', '*.yml')).and_return([ '/path/to/valid.yml' ])
         allow(File).to receive(:read).with('/path/to/valid.yml').and_return(valid_yaml)
 
         expect { Rake::Task['transformer:validate'].invoke }.to output(/All transformation files are valid./).to_stdout
@@ -64,7 +64,7 @@ RSpec.describe 'transformer rake tasks', type: :task do
     context 'with a file having invalid syntax' do
       it 'prints a syntax error message' do
         invalid_yaml = "name: 'invalid\ndescription: 'bad syntax'"
-        allow(Dir).to receive(:glob).with(Rails.root.join('config', 'transformations', '*.yml')).and_return(['/path/to/invalid_syntax.yml'])
+        allow(Dir).to receive(:glob).with(Rails.root.join('config', 'transformations', '*.yml')).and_return([ '/path/to/invalid_syntax.yml' ])
         allow(File).to receive(:read).with('/path/to/invalid_syntax.yml').and_return(invalid_yaml)
 
         expect { Rake::Task['transformer:validate'].invoke }.to output(/ERROR: Invalid YAML syntax in/).to_stdout
@@ -78,7 +78,7 @@ RSpec.describe 'transformer rake tasks', type: :task do
           'description' => 'Missing version and transformations'
         }.to_yaml
 
-        allow(Dir).to receive(:glob).with(Rails.root.join('config', 'transformations', '*.yml')).and_return(['/path/to/invalid_schema.yml'])
+        allow(Dir).to receive(:glob).with(Rails.root.join('config', 'transformations', '*.yml')).and_return([ '/path/to/invalid_schema.yml' ])
         allow(File).to receive(:read).with('/path/to/invalid_schema.yml').and_return(invalid_schema_yaml)
 
         # The new gem provides more specific error messages

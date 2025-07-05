@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'json_schemer'
+require "json_schemer"
 
 namespace :transformer do
   desc "Lists all available YAML transformations"
   task list: :environment do
     puts "Available Transformations:"
-    path = Rails.root.join('config', 'transformations', '*.yml')
+    path = Rails.root.join("config", "transformations", "*.yml")
     Dir.glob(path).each do |file|
       puts "  - #{File.basename(file, '.yml')}"
     end
@@ -14,17 +14,17 @@ namespace :transformer do
 
   desc "Validates all YAML transformation files against the schema"
   task validate: :environment do
-    schema_path = Rails.root.join('docs', 'schemas', 'transformation_schema.json')
+    schema_path = Rails.root.join("docs", "schemas", "transformation_schema.json")
     schema = Pathname.new(schema_path)
     schemer = JSONSchemer.schema(schema)
 
-    files = Dir.glob(Rails.root.join('config', 'transformations', '*.yml'))
+    files = Dir.glob(Rails.root.join("config", "transformations", "*.yml"))
     errors = []
 
     files.each do |file_path|
       begin
         file_content = File.read(file_path)
-        data = YAML.safe_load(file_content, permitted_classes: [Symbol], aliases: true)
+        data = YAML.safe_load(file_content, permitted_classes: [ Symbol ], aliases: true)
         validation_errors = schemer.validate(data).to_a
         next if validation_errors.empty?
 
