@@ -3,11 +3,9 @@
 require 'rails_helper'
 require 'rake'
 
-RSpec.describe 'Commit Validation Rake Tasks', type: :task do
-  before(:all) do
-    Rake.application.rake_require 'tasks/commit_validation'
-  end
+Rails.application.load_tasks
 
+RSpec.describe 'Commit Validation Rake Tasks', type: :task do
   before do
     Rake::Task['commit:review'].reenable
     Rake::Task['commit:message'].reenable

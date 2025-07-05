@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'open3'
 
 RSpec.describe RubocopAnalyzer, type: :service do
   let(:analyzer) { described_class.new }
@@ -26,10 +27,10 @@ RSpec.describe RubocopAnalyzer, type: :service do
 
     it 'handles RuboCop execution with mocked output' do
       files = [ 'app/models/test.rb' ]
+      status = instance_double(Process::Status, success?: true, exitstatus: 1)
 
-      # Mock the system command execution
-      allow(analyzer).to receive(:`).and_return(sample_rubocop_json)
-      allow($?).to receive(:success?).and_return(true)
+      # Mock the Open3.capture3 call
+      allow(Open3).to receive(:capture3).and_return([ sample_rubocop_json, "", status ])
       allow(File).to receive(:exist?).with('app/models/test.rb').and_return(true)
 
       result = analyzer.analyze_files(files)

@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "open3"
+require "shellwords"
+
 # Service to integrate RuboCop analysis with our commit validation system
 class RubocopAnalyzer
   def initialize
@@ -31,15 +34,16 @@ class RubocopAnalyzer
   end
 
   def run_rubocop(files)
-    cmd = [ @rubocop_executable.to_s, "--format", "json", "--force-exclusion" ] + files
-    result = `#{cmd.join(" ")}`
+    escaped_files = files.map { |file| Shellwords.escape(file) }
+    cmd = [ @rubocop_executable.to_s, "--format", "json", "--force-exclusion" ] + escaped_files
 
-    exit_status = $?&.exitstatus || 2
-    success = $?&.success? || false
+    stdout, stderr, status = Open3.capture3(cmd.join(" "))
 
-    raise "RuboCop execution failed" if exit_status == 2 && !success
+    # RuboCop exits 1 on success with offenses, 0 on success with no offenses.
+    # It exits > 1 on error.
+    raise "RuboCop execution failed: #{stderr.strip}" if !status.success? && status.exitstatus > 1
 
-    result
+    stdout
   end
 
   def parse_rubocop_output(json_output)
@@ -107,5 +111,9 @@ class RubocopAnalyzer
     end
 
     suggestions
+  end
+
+  def last_process_status
+    $?
   end
 end
