@@ -74,6 +74,7 @@
     <orderEntry type="library" scope="PROVIDED" name="irb (v1.15.2, mise: 3.4.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="jbuilder (v2.13.0, mise: 3.4.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="json (v2.12.2, mise: 3.4.4) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="json-schema (v2.8.1, mise: 3.4.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="kamal (v2.7.0, mise: 3.4.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="language_server-protocol (v3.17.0.5, mise: 3.4.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="lint_roller (v1.1.0, mise: 3.4.4) [gem]" level="application" />

@@ -30,7 +30,7 @@ We follow a documentation-driven, test-first process.
     *   Explain the Why, What, and How of the changeset to the user and invite them to do a first-parse review
     *   Use `rake commit:review` to analyze changes.
     *   Use `rake commit:message` to generate a conventional commit message
-    *   Use the generated message to write a suitable commit message summarizing the story completion
+    *   Use the generated message and the "Why/What/How" to write a suitable PR description summarizing the story completion
 4.  **Document**: After implementation, update all relevant documentation (`README.md`, `goals.md`, etc.) and their history logs.
 
 ### Key Principles & Standards
