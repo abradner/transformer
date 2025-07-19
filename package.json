@@ -28,7 +28,9 @@
   },
   "jest": {
     "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": ["<rootDir>/app/javascript/__tests__/setup.js"],
+    "setupFilesAfterEnv": [
+      "<rootDir>/app/javascript/__tests__/setup.js"
+    ],
     "testMatch": [
       "<rootDir>/app/javascript/**/__tests__/**/*.{js,jsx,ts,tsx}",
       "<rootDir>/app/javascript/**/*.{test,spec}.{js,jsx,ts,tsx}"
