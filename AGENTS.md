@@ -36,33 +36,66 @@ bundle exec rake transformer:validate # Validate YAML files
 
 ## Architecture & Patterns
 
-### Core Design
-- **Transformation Engine**: Modular with `Transformable` interface
+### Core Design - Clean Architecture
+- **Domain-Driven Design**: `TransformationDefinition` as core business entity
+- **Adapter Pattern**: Unified interface for file and database sources
+- **Dependency Inversion**: Business logic independent of storage mechanism
+- **Single Responsibility**: Each layer has clear, focused responsibilities
 - **Security-First**: Function whitelisting prevents code injection
 - **Zeitwerk Compliance**: File structure = class namespaces exactly
 
-### Key Directories
+### Key Directories - Clean Architecture
 ```
-app/models/transformations/         # Built-in classes (Base64, Regex)
-app/models/yaml_transformations/    # YAML system components
-app/services/                      # Business logic (commit validation, analysis)
-config/transformations/            # Sample YAML files
+app/models/domain/                  # Pure domain objects (no Rails dependencies)
+app/adapters/                      # Infrastructure adapters (File, Database)
+app/services/                      # Domain services & business logic 
+app/controllers/                   # Presentation layer (HTTP concerns only)
+app/models/                        # ActiveRecord persistence models
+config/transformations/            # File-based transformation definitions
 ```
 
-### Data Flow
+### Data Flow - Unified Sources
 ```
-Input → Selection → Processing Engine → Output
-              ↓
-      YAML Config ← → Built-in Library
+Controllers → Registry Service → Domain Objects
+                    ↓
+           [File Adapter] ← → [Database Adapter]
+                    ↓
+           Transformation Definition (unified interface)
+                    ↓
+           Processing Engine → Output
+```
+
+### Clean Architecture Layers
+```
+Presentation    → Controllers (HTTP, JSON)
+Application     → Services (Business Logic)
+Domain          → Models (Pure Business Objects)  
+Infrastructure  → Adapters (File, Database, External APIs)
 ```
 
 ## Development Workflow
 
 1. **Plan**: Update `goals.md` story status before implementing
-2. **Test-First**: Write RSpec/Jest tests before code
-3. **Implement**: Follow Zeitwerk naming strictly
-4. **Quality**: Run `rake commit:review` before committing
-5. **Document**: Update relevant docs and history logs
+2. **Architecture**: For complex changes, use Clean Architecture patterns (Domain → Services → Adapters → Controllers)
+3. **Test-First**: Write RSpec/Jest tests before code (mock adapters in controller tests)
+4. **Implement**: Follow Zeitwerk naming strictly, respect layer boundaries
+5. **Quality**: Run `rake commit:review` before committing
+6. **Document**: Update relevant docs and history logs
+
+### For Architectural Changes
+1. **TodoWrite Planning**: Break complex refactoring into manageable steps (mirror goals.md story tasks)
+2. **Domain First**: Start with pure domain objects (no Rails dependencies)
+3. **Adapter Pattern**: Create adapters for external dependencies
+4. **Service Layer**: Coordinate between adapters and domain logic
+5. **Controller Updates**: Minimal changes, delegate to services
+6. **Comprehensive Testing**: Test each layer independently with mocking
+7. **Story Completion**: Update goals.md only when all TodoWrite tasks complete
+
+### TodoWrite ↔ goals.md Workflow
+- **Story Start**: Convert goals.md checklist items into TodoWrite tasks
+- **Dynamic Planning**: Add implementation-specific subtasks as discovered
+- **Progress Tracking**: TodoWrite provides real-time progress, goals.md provides project context
+- **Completion Sync**: Mark goals.md story complete only when TodoWrite shows all tasks done
 
 ## Critical Requirements
 

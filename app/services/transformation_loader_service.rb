@@ -9,9 +9,10 @@ class TransformationLoaderService
   end
 
   # Load all transformations into the engine
-  def load_all
+  def load_all(user_id = nil)
     load_built_in_transformations
     load_yaml_transformations
+    load_custom_transformations(user_id)
     @engine
   end
 
@@ -103,6 +104,36 @@ class TransformationLoaderService
     else
       base_transformation
     end
+  end
+
+  def load_custom_transformations(user_id = nil)
+    return unless defined?(Transformation) # Only load if Transformation model exists
+
+    custom_loader = CustomTransformationLoaderService.new(@engine)
+    result = custom_loader.load_for_user(user_id)
+
+    # Add custom transformations to available list
+    custom_loader.available_transformations(user_id).each do |transformation|
+      @transformation_configs << {
+        name: transformation[:name],
+        display_name: transformation[:display_name],
+        description: transformation[:description],
+        type: "custom",
+        source: "database",
+        version: transformation[:version],
+        system_transformation: transformation[:system_transformation],
+        category: transformation[:category]
+      }
+    end
+
+    Rails.logger.info "Loaded #{result.loaded_count} custom transformations"
+
+    unless result.success?
+      Rails.logger.warn "Custom transformation loading had errors: #{result.errors.join(', ')}"
+    end
+  rescue StandardError => e
+    Rails.logger.error "Failed to load custom transformations: #{e.message}"
+    # Don't raise here - we want the engine to work even if custom transformations fail
   end
 
   def format_display_name(name)

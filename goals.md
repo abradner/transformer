@@ -153,12 +153,32 @@ A tool for common string transformations including:
 - [x] Build `rake transformer:validate` task for testing YAML files
 - [x] Add `rake transformer:list` to show available transformations
 
-### Story 2.7: Persistence Layer
-**Status**: Deferred until after 4.3
-- [ ] Transformation model and database design
-- [ ] CRUD operations for custom transformations
-- [ ] Named transformation management
-- [ ] Import/export functionality
+### Story 2.7: Clean Architecture Refactor & Unified Transformation Sources
+**Status**: ✅ Complete
+- [x] Implement Clean Architecture with proper layer separation
+- [x] Create adapter pattern for file-based YAML and database transformations
+- [x] Design unified domain model (`TransformationDefinition`) for both source types
+- [x] Refactor database schema with semver versioning and simplified structure
+- [x] Implement `TransformationRegistryService` with conflict resolution (database wins)
+- [x] Update controllers to use domain services instead of direct model access
+- [x] Create comprehensive test coverage with proper mocking (150 tests, 0 failures)
+- [x] Update documentation with architectural insights and development guidance
+
+**Technical Details**:
+- **Clean Architecture Layers**: Domain (pure business objects), Application (services), Infrastructure (adapters), Presentation (controllers)
+- **Adapter Pattern**: `FileTransformationAdapter` and `DatabaseTransformationAdapter` with unified interface
+- **Domain Model**: `TransformationDefinition` representing both file and database transformations
+- **Conflict Resolution**: Database transformations take precedence over file-based ones with same name
+- **Database Schema**: Simplified with `transformations_yaml` field, semver versioning, removed unnecessary columns
+
+**Completed**: Major architectural refactoring implementing Clean Architecture principles with unified transformation management. File-based YAML and database transformations now share the same business logic through adapter pattern, providing clean separation of concerns and extensibility for future transformation sources.
+
+### Story 2.8: Advanced Persistence Features  
+**Status**: Not Started
+- [ ] Soft deletion support for database transformations
+- [ ] Transformation versioning and rollback functionality
+- [ ] Import/export functionality for transformation definitions
+- [ ] Transformation usage analytics and tracking
 - [ ] Create development helpers for transformation testing
 
 ---
@@ -426,6 +446,12 @@ npm run test:coverage
 ---
 
 ## History Log
+- **2025-07-19**: Completed Story 2.7 - Major Clean Architecture refactoring with unified transformation sources
+- **2025-07-19**: Implemented adapter pattern for file-based YAML and database transformations with conflict resolution
+- **2025-07-19**: Created domain-driven design with `TransformationDefinition` as core business entity
+- **2025-07-19**: Refactored database schema with semver versioning and simplified structure  
+- **2025-07-19**: Updated comprehensive test coverage to 150 tests with proper mocking for isolation
+- **2025-07-19**: Updated documentation (README.md, CLAUDE.md, AGENTS.md) with architectural insights
 - **2025-07-19**: Completed Epic 4.1 Core Transformation Playground with full browser interface implementation
 - **2025-07-19**: Implemented comprehensive testing with 109 RSpec + 20 Jest tests, all passing
 - **2025-07-19**: Built service-oriented architecture with TransformationLoaderService following SOLID principles

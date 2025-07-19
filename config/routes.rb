@@ -12,10 +12,11 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "transformations#index"
 
-  resources :transformations, only: [ :index ] do
+  resources :transformations do
     collection do
       post :preview
       get :available
+      get :list
     end
   end
 end

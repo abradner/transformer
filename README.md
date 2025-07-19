@@ -4,10 +4,11 @@ A modern string manipulation web application built with Ruby on Rails 8.0.2 for 
 
 ## 🏗️ Application Overview
 
-Transformer provides a powerful, secure system for text processing including:
+Transformer provides a powerful, secure system for text processing with a modern **clean architecture** approach:
 - **Regex replacements** for log/payload readability  
 - **Base64 encoding/decoding** for strings and Kubernetes config maps
-- **Named transformation persistence** with built-in YAML + database storage
+- **Unified transformation system** with file-based YAML + database persistence
+- **Domain-driven design** with adapters for different storage sources
 - **Live editor interface** for crafting and testing transformations (planned)
 - **CLI tool** for batch processing (planned)
 
@@ -30,34 +31,34 @@ Transformer provides a powerful, secure system for text processing including:
 - **Styling**: CSS with modern approaches
 - **Testing**: Jest (when configured)
 
-### Architecture
+### Architecture - Clean Architecture with Adapters
+
 ```mermaid
 graph TB
-    subgraph "Frontend Layer"
-        A[React Components] --> B[Stimulus Controllers]
-        B --> C[Turbo Frames/Streams]
+    subgraph "Presentation Layer"
+        A[Controllers] --> B[JSON API]
+        A --> C[Web Interface]
+        B --> D[Domain Services]
+        C --> D
     end
     
-    subgraph "Transformation Engine"
-        D[Input] --> E[Transformation Selection]
-        E --> F[Processing Engine]
-        F --> G[Output]
+    subgraph "Domain Layer"
+        D --> E[TransformationRegistryService]
+        E --> F[TransformationDefinition]
+        F --> G[Transformation Engine]
     end
     
-    subgraph "Configuration Sources"
-        H[Built-in YAML] --> I[Transformation Library]
-        J[Database Storage] --> I
-        I --> E
+    subgraph "Infrastructure Adapters"
+        H[FileTransformationAdapter] --> E
+        I[DatabaseTransformationAdapter] --> E
+        J[YAML Files] --> H
+        K[SQLite Database] --> I
     end
     
-    subgraph "YAML Processing"
-        K[YAML Loader] --> L[Schema Validation]
-        L --> M[Function Security Check]
-        M --> N[Liquid Template Engine]
-        N --> I
+    subgraph "Conflict Resolution"
+        E --> L[Database Wins Over Files]
+        L --> M[Unified Interface]
     end
-    
-    C --> D
 ```
 
 ## 🛠️ Development Setup
@@ -108,41 +109,82 @@ docker run -p 3000:3000 transformer
 - **Function Security**: Whitelisted function calls prevent code injection
 - **Sample Library**: Real-world transformation examples including K8s Secret decoding
 
-## 📁 Project Structure
+## 📁 Project Structure - Clean Architecture
 
 ### Core Components
 ```
 app/
-├── controllers/         # Rails controllers
-├── models/             # ActiveRecord models & transformation engine
+├── controllers/         # Presentation layer - HTTP concerns only
+│   └── transformations_controller.rb  # Orchestrates domain services
+├── models/             # Domain & persistence models
+│   ├── domain/         # Pure domain objects (no Rails dependencies)
+│   │   └── transformation_definition.rb  # Core domain model
+│   ├── transformation.rb              # Database persistence model  
 │   ├── concerns/       # Transformable interface
-│   ├── transformations/ # Built-in transformation classes
-│   │   ├── base64_decode.rb
-│   │   ├── base64_encode.rb
-│   │   └── regex_replace.rb
-│   ├── yaml_transformations/    # YAML-based transformation system
-│   │   ├── base.rb
-│   │   ├── composite_transformation.rb
-│   │   ├── function_based_transformation.rb
-│   │   └── ...
-│   ├── yaml_transformation_loader.rb # YAML file processing
-│   └── yaml_function_registry.rb    # Security function whitelist
+│   └── transformations/ # Built-in transformation classes
+├── adapters/           # Infrastructure adapters (Hexagonal Architecture)
+│   ├── file_transformation_adapter.rb     # YAML file source
+│   └── database_transformation_adapter.rb # Database source
+├── services/           # Domain services & business logic
+│   ├── transformation_registry_service.rb # Unified transformation management
+│   └── transformation_loader_service.rb   # Legacy loader (refactored)
 ├── views/              # ERB templates
 ├── javascript/         # Stimulus + React components
-│   ├── controllers/    # Stimulus controllers
-│   └── __tests__/      # Jest test setup
-├── jobs/               # Background jobs
-└── services/           # Business logic services
+└── jobs/               # Background jobs
 
-config/transformations/          # Sample YAML transformations
+config/transformations/          # File-based transformation definitions
 ├── k8s_secret_decoder.yml      # Kubernetes Secret base64 decoder
 ├── log_timestamp_normalizer.yml # ISO timestamp converter
 └── log_level_highlighter.yml   # Log level emoji highlighter
 
-spec/                   # RSpec test files
+spec/                   # Comprehensive test coverage
+├── adapters/           # Adapter layer tests
+├── controllers/        # Controller integration tests (with mocking)
+├── services/           # Domain service tests
 ├── models/             # Model and engine specs
-├── support/            # Test helpers and matchers
-└── factories/          # Test data factories
+└── support/            # Test helpers and matchers
+```
+
+### Key Architectural Decisions
+
+#### 1. **Clean Architecture Implementation**
+- **Domain Layer**: `TransformationDefinition` as core business entity
+- **Application Layer**: `TransformationRegistryService` coordinates business logic
+- **Infrastructure Layer**: Adapters for file and database sources
+- **Presentation Layer**: Controllers handle HTTP concerns only
+
+#### 2. **Adapter Pattern for Data Sources**
+```ruby
+# Unified interface for both file and database transformations
+class TransformationRegistryService
+  def initialize
+    @file_adapter = FileTransformationAdapter.new
+    @database_adapter = DatabaseTransformationAdapter.new
+  end
+  
+  def load_all
+    # Combines both sources with conflict resolution
+  end
+end
+```
+
+#### 3. **Domain-First Design**
+- **Single Source of Truth**: `TransformationDefinition` represents all transformations
+- **Source Agnostic**: Business logic doesn't care about storage mechanism
+- **Conflict Resolution**: Database transformations override file-based ones
+
+#### 4. **Database Schema Design**
+```sql
+-- Simplified, focused schema based on YAML structure
+CREATE TABLE transformations (
+  name VARCHAR NOT NULL,           -- Unique identifier
+  description TEXT,                -- Human-readable description  
+  transformations_yaml TEXT NOT NULL, -- Just the transformations array
+  transformation_type VARCHAR NOT NULL,   -- Type indicator
+  version VARCHAR DEFAULT '1.0.0',        -- Semantic versioning
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
+);
 ```
 
 ## 🧪 Testing Strategy

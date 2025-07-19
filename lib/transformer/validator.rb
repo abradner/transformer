@@ -44,5 +44,42 @@ module Transformer
       end
       errors
     end
+
+    def validate_yaml_string(yaml_content)
+      schema_path = Rails.root.join("docs", "schemas", "transformation_schema.json")
+      schema = Pathname.new(schema_path)
+      schemer = JSONSchemer.schema(schema)
+
+      begin
+        data = YAML.safe_load(yaml_content)
+        validation_errors = schemer.validate(data).map do |e|
+          "#{e['type']} - #{e['error']} at #{e['data_pointer']}"
+        end
+
+        ValidationResult.new(validation_errors.empty?, validation_errors)
+      rescue Psych::SyntaxError => e
+        ValidationResult.new(false, [ "Invalid YAML syntax: #{e.message}" ])
+      rescue StandardError => e
+        ValidationResult.new(false, [ "Validation error: #{e.message}" ])
+      end
+    end
+  end
+end
+
+# Simple result class for validation results
+class ValidationResult
+  attr_reader :errors
+
+  def initialize(valid, errors = [])
+    @valid = valid
+    @errors = errors
+  end
+
+  def valid?
+    @valid
+  end
+
+  def invalid?
+    !@valid
   end
 end
