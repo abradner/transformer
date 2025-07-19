@@ -6,7 +6,8 @@
       "Bash(bundle exec rubocop:*)",
       "Bash(bundle exec rake:*)",
       "Bash(npm test)",
-      "Bash(bundle install:*)"
+      "Bash(bundle install:*)",
+      "Bash(find:*)"
     ],
     "deny": []
   }
