@@ -154,7 +154,7 @@ A tool for common string transformations including:
 - [x] Add `rake transformer:list` to show available transformations
 
 ### Story 2.7: Persistence Layer
-**Status**: Not Started
+**Status**: Deferred until after 4.3
 - [ ] Transformation model and database design
 - [ ] CRUD operations for custom transformations
 - [ ] Named transformation management
@@ -164,19 +164,51 @@ A tool for common string transformations including:
 ---
 
 ## Epic 3: API Interface
-**Status**: Not Started
+**Status**: In Progress
 
 ### Story 3.1: REST API Foundation
-**Status**: Not Started
-- [ ] API authentication strategy
-- [ ] Transformation endpoints (apply, list, CRUD)
-- [ ] Request/response format design
-- [ ] Error handling and validation
-- [ ] API documentation (OpenAPI/Swagger)
+**Status**: ✅ Complete (Basic Implementation)
+- [x] Design request/response format for API endpoints  
+- [x] Implement `GET /transformations/available` to list available transformations
+- [x] Implement `POST /transformations/preview` for real-time transformation preview
+- [x] Implement basic error handling and validation
+- [x] Add comprehensive test coverage for API endpoints
+- [ ] Implement `GET /api/v1/transformations` for YAML-based transformations (Future)
+- [ ] Implement `POST /api/v1/transform` for named transformation application (Future)
 
-### Story 3.2: Batch Processing
+**Completed**: Basic REST API with JSON endpoints supporting the browser interface. Ready for extension to full API specification.
+
+### Story 3.2: Real-time Transformation API (WebSocket)
+**Status**: Deferred (Direct API approach implemented)
+- [x] Real-time transformation via direct HTTP API (implemented for browser UI)
+- [ ] Design WebSocket message format for real-time transformations (Future)
+- [ ] Implement ActionCable channel for live transformation updates (Future)
+- [ ] Add WebSocket authentication and connection management (Future)
+- [ ] Implement real-time error handling and validation (Future)
+- [ ] Add comprehensive test coverage for WebSocket functionality (Future)
+
+**Note**: Browser interface uses direct API calls for real-time updates. WebSocket approach available for future optimization.
+
+### Story 3.3: API Authentication & Security
 **Status**: Not Started
-- [ ] Multiple string processing
+- [ ] Implement API key authentication for REST endpoints
+- [ ] Add rate limiting and throttling
+- [ ] Implement CORS configuration for browser access
+- [ ] Add security headers and validation
+- [ ] Create API documentation (OpenAPI/Swagger)
+
+### Story 3.4: CRUD Operations for Custom Transformations
+**Status**: Not Started
+**Dependencies**: Epic 2.7 (Persistence Layer)
+- [ ] Implement `POST /api/v1/transformations` to create custom transformations
+- [ ] Implement `PUT /api/v1/transformations/:id` to update transformations
+- [ ] Implement `DELETE /api/v1/transformations/:id` to delete transformations
+- [ ] Add validation for custom transformation YAML
+- [ ] Implement transformation import/export endpoints
+
+### Story 3.5: Batch Processing
+**Status**: Not Started
+- [ ] Multiple string processing endpoints
 - [ ] File upload processing
 - [ ] Async job processing for large transformations
 - [ ] Progress tracking and status endpoints
@@ -197,6 +229,8 @@ A tool for common string transformations including:
 - [x] Service-oriented architecture following SOLID principles
 - [x] Comprehensive testing with RSpec and Jest test suites
 - [x] CSRF protection configuration for development API access
+- [x] Create a main controller and root route for the application (delivered as single-page app)
+- [x] Set up Turbo and Stimulus integration
 
 **Technical Implementation**:
 - **Frontend**: Stimulus controller with real-time API integration
@@ -206,7 +240,7 @@ A tool for common string transformations including:
 - **Architecture**: Service-oriented design with TransformationLoaderService
 - **Security**: Environment-level CSRF configuration for localhost development
 
-**Completed**: Core browser transformation interface with real-time preview, built-in transformation support (Base64 encode/decode), comprehensive error handling, responsive design, and extensive test coverage. Provides immediate value with clean foundation for future enhancements.
+**Completed**: Core browser transformation interface with real-time preview, built-in transformation support (Base64 encode/decode), comprehensive error handling, responsive design, and extensive test coverage. Delivers immediate value with direct API integration (bypassing planned WebSocket approach for faster delivery).
 
 ### Story 4.2: Advanced Pattern Editor
 **Status**: Not Started
@@ -231,17 +265,27 @@ A tool for common string transformations including:
 - [ ] Import/export transformation definitions
 - [ ] Transformation versioning and comparison
 - [ ] Transformation history/undo functionality within editor session
+- [ ] Create transformation browsing and management pages
+- [ ] Implement transformation creation/editing forms
+- [ ] Add transformation testing interface
+- [ ] Implement transformation import/export UI
+- [ ] Add transformation versioning and comparison views
 
 **Goal**: Allow users to save, organize, and reuse custom transformation patterns, requiring database persistence layer.
 
 ### Story 4.4: Multi-page Navigation & Authentication
 **Status**: Not Started
 **Dependencies**: Epic 2.7 (Persistence Layer)
-- [ ] Application layout and navigation structure
+- [ ] Application layout and navigation structure (header, navigation, content area)
 - [ ] Transformation management pages (browse, edit, organize)
 - [ ] Authentication UI (if needed for saved transformations)
 - [ ] User dashboard and transformation library
 - [ ] Navigation between playground and management interfaces
+- [ ] Implement user registration and login forms
+- [ ] Add user dashboard for managing personal transformations
+- [ ] Implement user profile management
+- [ ] Add user-specific transformation organization
+- [ ] Implement sharing and collaboration features
 
 **Goal**: Evolve from single-page playground to full application with multiple views and user management.
 
@@ -253,6 +297,11 @@ A tool for common string transformations including:
 - [ ] Performance optimizations for large text processing
 - [ ] Accessibility improvements and screen reader support
 - [ ] Dark mode and theme customization
+- [ ] Add syntax highlighting for input/output text areas
+- [ ] Add export functionality for transformation results
+- [ ] Add drag-and-drop file upload for batch processing
+- [ ] Implement advanced error highlighting and validation feedback
+- [ ] Implement transformation result sharing via URLs
 
 **Goal**: Polish the user experience with advanced features and accessibility improvements.
 
@@ -377,11 +426,13 @@ npm run test:coverage
 ---
 
 ## History Log
-- **2025-07-19**: Completed Epic 4 Browser Interface with full transformation playground implementation
+- **2025-07-19**: Completed Epic 4.1 Core Transformation Playground with full browser interface implementation
 - **2025-07-19**: Implemented comprehensive testing with 109 RSpec + 20 Jest tests, all passing
 - **2025-07-19**: Built service-oriented architecture with TransformationLoaderService following SOLID principles
-- **2025-07-19**: Created real-time transformation preview interface using Stimulus and Tailwind CSS
-- **2025-07-05**: Created Epic 7 to address documentation and implementation drift.
+- **2025-07-19**: Created real-time transformation preview interface using Stimulus and direct API integration
+- **2025-07-19**: Delivered functional browser UI bypassing planned WebSocket approach for faster MVP delivery
+- **2025-07-05**: Pivoted to API and UI foundation (Epic 3 & 4) to enable early application use, deferring persistence
+- **2025-07-05**: Created Epic 7 to address documentation and implementation drift
 - **2025-07-05**: Integrated RuboCop with commit validation system, replacing custom quality checks with professional linting
 - **2025-07-05**: Added commit validation and review tooling with rake tasks `commit:review` and `commit:message`
 - **2025-07-02**: Added line_range filtering to function_based transformations for targeted line processing
